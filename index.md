@@ -210,83 +210,83 @@ Wir sehen nun, dass der von der beschnittenen Satellitenaufnahme abgedeckte Bere
 
 ![](Tut_1_Fig_10.png)
 
-#### Approach 2: Clipping to the exact outline of the Shapefile ####
+#### Ansatz 2: Zuschneiden auf den exakten Umriss der Shapefile-Datei ####
 
-To clip the raster file to the exact shape of the polygon, only one additional step is required. Basically, the clipping procedure remains the same but after the image has been clipped to the rectangular extent of the shapefile, the remainding pixels that are not located within the polygon are masked out using the **mask** command of the *raster* package. The results in the following code:
+Um die Rasterdatei genau auf die Form des Polygons zu beschneiden, ist nur ein zusätzlicher Schritt erforderlich. Grundsätzlich bleibt das Beschneidungsverfahren dasselbe, doch nachdem das Bild auf die rechteckige Ausdehnung des Shapefiles beschnitten wurde, werden die verbleibenden Pixel, die sich nicht innerhalb des Polygons befinden, mit dem Befehl **mask** des *raster*-Pakets ausgeblendet. Das ergibt den folgenden Code:
 
-	setwd("D:/remote_sensing/Landsat/Output")
-	ls_wien_clip2 <- mask(ls_wien_clip, vec)
+	setwd(„D:/remote_sensing/Landsat/Output“)
+    ls_wien_clip2 <- mask(ls_wien_clip, vec)
 
-The masking procedure may take quite a long time depending on the computer's performance. In the end the image should look like this:
+Der Maskierungsvorgang kann je nach Rechnerleistung recht lange dauern. Am Ende sollte das Bild wie folgt aussehen:
 
 ![](Tut_1_Fig_11.png)
 
-#### Exercise: Clipping #####
+#### Übung: Zuschneiden #####
 
-To practise the clipping procedure, try to implement the code to also clip the second Landsat image (from the folder **D310**) using the same R commands. We will use the clipped version of this second image (which should look like the image below) in the next Step.
+Um das Zuschneiden zu üben, versuchen Sie, den Code so anzupassen, dass auch das zweite Landsat-Bild (aus dem Ordner **D310**) mit denselben R-Befehlen zugeschnitten wird. Die zugeschnittene Version dieses zweiten Bildes (die wie das untenstehende Bild aussehen sollte) werden wir im nächsten Schritt verwenden.
 
 ![](Tut_1_Fig_12.png)
 
 
-### STEP 4: Applying a cloud mask ###
+### SCHRITT 4: Anwenden einer Wolkenmaske ###
 
-In this next step, we will make use of the cloud-mask product that is routinely delivered with the Landsat 8 surface reflectance product. The cloud-mask product is currently stored in the folder **Landsat/D310/cl_mask**. As only the second Landsat image (**D310**) is affected by some clouds, we will use this scene as example.
+Im nächsten Schritt nutzen wir das Wolkenmaskenprodukt, das standardmäßig zusammen mit dem Landsat-8-Oberflächenreflexionsprodukt bereitgestellt wird. Das Wolkenmaskenprodukt befindet sich derzeit im Ordner **Landsat/D310/cl_mask**. Da nur das zweite Landsat-Bild (**D310**) von einigen Wolken betroffen ist, verwenden wir diese Szene als Beispiel.
 
-To load the cloud-mask we will use the already familiar code to load a raster image:
+Um die Wolkenmaske zu laden, verwenden wir den bereits bekannten Code zum Laden eines Rasterbildes:
 
-	setwd("D:/remote_sensing/Landsat/D310/cl_mask")
-	d310_mask <- stack("LC81910282015310LGN00_cfmask.tif")
+    setwd(„D:/remote_sensing/Landsat/D310/cl_mask“)
+	d310_mask <- stack(„LC81910282015310LGN00_cfmask.tif“)
 
-We can have a look at the just loaded data by plotting the raster using:
+Wir können uns die gerade geladenen Daten ansehen, indem wir das Raster mit folgendem Befehl plotten:
 
-	plot(d310_mask)
+    plot(d310_mask)
 
-This leads to the following image:
+Dies führt zu folgendem Bild:
 
 ![](Tut_1_Fig_13.png)
 
-Be aware that it makes no sense to use the **plotRGB** command here, as the cloud-mask raster contains only a single raster layer/channel.
+Beachten Sie, dass es hier keinen Sinn macht, den Befehl **plotRGB** zu verwenden, da das Wolkenmaskenraster nur eine einzige Rasterebene bzw. einen einzigen Kanal enthält.
 
-We can see that the cloud-mask layer contains five different values in our case. To understand what each of the 5 classes exactly mean, it is necessary to refer to the Landsat 8 surface reflectance guide (Link provided above).
+Wir sehen, dass die Wolkenmaskenebene in unserem Fall fünf verschiedene Werte enthält. Um zu verstehen, was jede der fünf Klassen genau bedeutet, muss man den Leitfaden zur Oberflächenreflexion von Landsat 8 zu Rate ziehen (Link siehe oben).
 
-To make the masking-process more effective, we will now first clip the cloud-mask to the same extent as the already clipped Landsat images. Therefore, we will use the same commands as just learned:
+Um den Maskierungsprozess effektiver zu gestalten, werden wir nun zunächst die Wolkenmaske auf denselben Ausschnitt zuschneiden wie die bereits zugeschnittenen Landsat-Bilder. Dazu verwenden wir dieselben Befehle, die wir gerade gelernt haben:
 
-	d310_mask_clip <- crop(d310_mask, e)
-	d310_mask_clip2 <- mask(d310_mask_clip, vec)
+    d310_mask_clip <- crop(d310_mask, e)
+    d310_mask_clip2 <- mask(d310_mask_clip, vec)
 	plot(d310_mask_clip2)
 
-This should result in the following image:
+Dies sollte zu folgendem Bild führen:
 
 ![](Tut_1_Fig_14.png)
 
-If we compare this to the original image:
+Wenn wir dies mit dem Originalbild vergleichen:
 
 ![](Tut_1_Fig_12.png)
 
-we can infer, that the value 3 seems to indicate cloud-cover, value 2 cloud-shadows and value 1 water bodies. Clear pixels are indicated by a value of 0. Please be aware that these values may change depending on the version of the surface reflectance product applied. It is highly recommended to double-check this information in the corresponding product guide.
+Wir können daraus schließen, dass der Wert 3 offenbar die Wolkendecke, der Wert 2 Wolkenschatten und der Wert 1 Gewässer bezeichnet. Klare Pixel werden durch den Wert 0 gekennzeichnet. Bitte beachten Sie, dass sich diese Werte je nach der verwendeten Version des Oberflächenreflexionsprodukts ändern können. Es wird dringend empfohlen, diese Informationen im entsprechenden Produktleitfaden zu überprüfen.
 
-As next step, we will have to mask our the clouds, or alternatively, all pixels that are neither clear nor water. In this case, we will follow the latter approach. To achieve this, we will first create a binary mask from the cloud-cover layer using the command:
+Als nächsten Schritt müssen wir die Wolken maskieren oder alternativ alle Pixel, die weder klar noch Wasser sind. In diesem Fall verfolgen wir den letzteren Ansatz. Dazu erstellen wir zunächst eine binäre Maske aus der Wolkendeckenschicht mit dem Befehl:
 
-	d310_mask_clip_bin <- d310_mask_clip2 > 1
-	plot(d310_mask_clip_bin)
+    d310_mask_clip_bin <- d310_mask_clip2 > 1
+    plot (d310_mask_clip_bin)
 
-In this new layer, all areas affected by clouds or cloud-cover are now marked with a value of 1 while all pixels being either clear of water bodies have a value of 0.
+In dieser neuen Ebene sind nun alle von Wolken oder Wolkendecke betroffenen Bereiche mit dem Wert 1 gekennzeichnet, während alle Pixel, die entweder klar oder Gewässer sind, den Wert 0 haben.
 
 ![](Tut_1_Fig_15.png)
 
-Now, we can apply this mask to the original clipped Landsat image using the following command:
+Nun können wir diese Maske mit dem folgenden Befehl auf das ursprüngliche, beschnittene Landsat-Bild anwenden:
 
-	d310_masked <- mask(ls_d310_clip2, d310_mask_clip_bin, maskvalue=1,  updatevalue=NA)
-	plotRGB(d310_masked, r=3, g=2, b=1, stretch="hist")
+    d310_masked <- mask(ls_d310_clip2, d310_mask_clip_bin, maskvalue=1,  updatevalue=NA)
+    plotRGB(d310_masked, r=3, g=2, b=1, stretch="hist")
 
-!! Be aware that you have to create the ls_d310_clip2 image first by adapting the code above provided for the d239 image as mentioned in the exercise - this code is not included here!! This will lead to a new version of the Landsat image where all cloud-affected pixels were masked out by replacing all values in the Landsat image with NA (=not available).
+!! Beachten Sie, dass Sie zunächst das Bild ls_d310_clip2 erstellen müssen, indem Sie den oben für das d239-Bild bereitgestellten Code wie in der Übung beschrieben anpassen – dieser Code ist hier nicht enthalten!! Dies führt zu einer neuen Version des Landsat-Bildes, in der alle von Wolken betroffenen Pixel ausgeblendet wurden, indem alle Werte im Landsat-Bild durch NA (= nicht verfügbar) ersetzt wurden.
 
 ![](Tut_1_Fig_16.png)
 
-To save this image, we can either define a filename in the **mask()**-function as done before in the **crop()**-function or we can use a separate command:
+Um dieses Bild zu speichern, können wir entweder wie zuvor in der **crop()**-Funktion einen Dateinamen in der **mask()**-Funktion angeben oder einen separaten Befehl verwenden:
 
-	writeRaster(d310_masked, filename="Landsat8_D310_cloud_masked.tif", format="GTiff")
+    writeRaster(d310_masked, filename="Landsat8_D310_cloud_masked.tif", format="GTiff")
 
-We may want to change the current path to an output folder before saving the raster file. You can use the **setwd()**-function to achieve this. 
+Möglicherweise möchten wir den aktuellen Pfad in einen Ausgabeordner ändern, bevor wir die Rasterdatei speichern. Dazu können Sie die **setwd()**-Funktion verwenden. 
 
 
