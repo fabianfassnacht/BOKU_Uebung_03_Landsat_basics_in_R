@@ -3,7 +3,7 @@ Fernerkundung in der Landschaftsplanung - Tag 3 - Prozessierung von Landsatdaten
 
 **Autoren:** Dieses Tutorial wurde von Fabian Fassnacht entwickelt.
 
-## Basic processing of Landsat data with R ##
+## Grundlegende Prozessierung von Landsat-Daten with R ##
 
 
 ### Overview ###
@@ -19,48 +19,52 @@ Die in diesem Tutorial verwendeten Datensätze sind hier verfügbar:
 
 https://drive.google.com/drive/folders/1cKngQQMJCMTNfnh1OXvygAX5ntseIJ8X?usp=sharing
 
+Bitte laden Sie die Dateien herunter und speichern Sie sie die gepackte Datei in einem Ordner, den sie wiederfinden können. Danach navigieren Sie in den Ordner und entpacken Sie die Datei. Dies sollte zu einem neuen Ordner führen, der eine grössere Zahl an Dateien enthält (Abbildung 1).
+
+![](Fig_01.png)
+
 
 ### Verwendete Datensätze ###
 
 In diesem Tutorial verwenden wir ein Landsat-8 und ein Landsat-9-Bild. Genauer gesagt nutzen wir Produkte, die Informationen zur Oberflächenreflexion enthalten. DIe Bilder wurden von der USGS Earth Explorer-Webseite [https://earthexplorer.usgs.gov/](https://earthexplorer.usgs.gov/) heruntergeladen. Wie man die entsprechenden Bilder herunterlädt, wird in den Hausaufgaben von dieser Woche behandelt (siehe Ende des Tutorials).
 
-Detaillierte Informationen zur Struktur der zwei Datensätze finden Sie hier: [https://www.usgs.gov/landsat-missions/product-information](https://www.usgs.gov/landsat-missions/product-information „Landsat-8-Produktleitfaden“)
+Detaillierte Informationen (Level-2 Scene-based Science Products-Handbücher) zur Struktur der zwei Datensätze finden Sie hier: https://www.usgs.gov/landsat-missions/landsat-science-products
 
-### Step 1: Loading Landsat data ###
+Es ist sehr lohnenswert, sich diese Informationen anzusehen, da sie der Schlüssel dafür sind die heruntergeladenen Produkte vollkommen zu verstehen. Sie werden sehen, dass die heruntergeladenen Datensätze aus einer Vielzahl an Dateien bestehen und die Information was diese Dateien genau enthalten finden sich alle in den oben genannten **Level-2 Scene-based Science Products**-Handbüchern.
 
-As first step, load all necessary R packages by executing the following code:
+### Schritt 1: Vorbereitung der Satellitenbilddaten
 
-    pkgs<-c("rgdal","caret","raster","foreign", "kernlab")
-	lapply(pkgs,require, character.only=T)
 
-R will give you a warning message in case a package is not installed yet. If this is the case, please install the packages either through the main menu of Rstudio by selecting **"Tools" =>** **"Install packages"** and then following the appearing dialogue, or by entering the corresponding R code to install the packages into the console. E.g., to install the package "raster" use the code:
 
-	install.packages("raster")	
 
-After all packages are successfully installed, load the images using two steps. First, save the complete file-paths of all Landsat bands into a text-variable using the command:
+### Schritt 2: Laden der Landsat-Daten ###
 
-	bandnames <- list.files("D:/remote_sensing/Landsat/D239", pattern="\\.tif$", full.names = T)
+Laden Sie als ersten Schritt alle erforderlichen R-Pakete, indem Sie den folgenden Code ausführen:
+
+require(terra)
+
+R gibt eine Warnmeldung aus, falls ein Paket noch nicht installiert ist. Ist dies der Fall, installieren Sie die Pakete bitte entweder über das Hauptmenü von RStudio, indem Sie **„Tools“ =>** **„Install packages“** auswählen und den Anweisungen im angezeigten Dialog folgen, oder indem Sie den entsprechenden R-Code zur Installation der Pakete in die Konsole eingeben. Um beispielsweise das Paket „terra“ zu installieren, verwenden Sie den folgenden Code:
+
+	install.packages(„raster“)    
+
+Nachdem alle Pakete erfolgreich installiert wurden, laden Sie die Bilder in zwei Schritten. Speichern Sie zunächst die vollständigen Dateipfade aller Landsat-Bänder in einer Textvariablen mit dem Befehl:
+
+    bandnames <- list.files(„D:/remote_sensing/Landsat/D239“, pattern="\\.tif$", full.names = T)
 	bandnames
 
-The file-path given in the code above should be changed to match the path where you are storing the corresponding files on your computer. Next, apply the "stack" command of the raster package to load the image into an R raster object:
+Der im obigen Code angegebene Dateipfad sollte so geändert werden, dass er mit dem Pfad übereinstimmt, unter dem Sie die entsprechenden Dateien auf Ihrem Computer gespeichert haben. Wenden Sie anschließend den Befehl „stack“ des Raster-Pakets an, um das Bild in ein R-Rasterobjekt zu laden:
 
-	ls_d239 <- stack(bandnames)
+    ls_d239 <- stack(bandnames)
 	
-The stack command does not yet load the whole dataset into the memory but just reads the meta-data of the file and establishes links to the data on the hard drive. Finally, run the variable name to obtain a summary of the raster file:
+Der Befehl „stack“ lädt noch nicht den gesamten Datensatz in den Speicher, sondern liest lediglich die Metadaten der Datei und stellt Verknüpfungen zu den Daten auf der Festplatte her. Führen Sie abschließend den Variablennamen aus, um eine Zusammenfassung der Rasterdatei zu erhalten:
 
-	ls_d239
+    ls_d239
 
-This should give you a console-output like this:
+Dies sollte eine Konsolenausgabe wie die folgende ergeben:
 
-![](Tut_1_Fig_1.png)
+![](Tut_1_Fig_
 
-The displayed information tells you mostly something about the meta-data of the raster file.
-
-Be aware that this procedure of loading a Landsat image will only work if the downloaded Landsat reflectance product has already been extracted from the compressed file and relevant GeoTiff-files containing the spectral information of the individual bands were stored into a separate folder. In our case, the folder **D239** contains the following folders and files:
-
-![](Tut_1_Fig_2.png)
-
-On the lowest level, all relevant bands for the Landsat 8 scene are stored (*band2 - *band7.tif), in the folder **"cl_mask"**, a tif-file containing the results of the fmask-cloud masking algorithm that is applied during the creation of the Landsat-8 reflectance product is stores. The **"other"** folder contains the the *band.tif file which is not applied here, as it mostly serves for the atmospheric correction. The **"composit"** folder is currently empty but will be used to save a new tif-file which contains all the 6 considered Landsat-bands in a single file. This folder structure was created manually in the given case to ease the handling of the data in the tutorial. Be aware that you will have to conduct these steps yourself once you are working with your own datasets.
+Übersetzt mit DeepL.com (kostenlose Version)
 
 ### Step 2:  Visualizing Landsat data ###
 
