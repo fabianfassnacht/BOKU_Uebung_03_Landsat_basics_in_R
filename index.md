@@ -98,50 +98,52 @@ Dies sollte eine Konsolenausgabe wie die folgende ergeben:
 
 Übersetzt mit DeepL.com (kostenlose Version)
 
-### Step 2:  Visualizing Landsat data ###
+### Schritt 2:  Visualisierung von Landsat-Daten ###
 
-After loading the Landsat scene, we would like to have a first glance how the image looks like. There are two basic options for plotting the satellite scene in R. The first option uses the code:
+Nachdem wir die Landsat-Aufnahme geladen haben, möchten wir uns einen ersten Eindruck davon verschaffen, wie das Bild aussieht. Es gibt zwei grundlegende Möglichkeiten, die Satellitenaufnahme in R darzustellen. Die erste Möglichkeit nutzt den folgenden Code:
 
-	plot(ls_wien)
+    plot(ls_wien)
 
-With this code, all bands of the satellite scene will be individually plotted next to each other in a matrix of plots as shown below. 
+Mit diesem Code werden alle Bänder der Satellitenaufnahme einzeln nebeneinander in einer Matrix aus Diagrammen dargestellt, wie unten gezeigt. 
 
 ![](Tut_1_Fig_3.png)
 
-In some cases, executing the above code may result in an error message that the margins are too small to plot the data. The solution to this problem is to first open a pop-up plotting window in R and then execute the plot commant. This works by using the following code.
+In einigen Fällen kann die Ausführung des obigen Codes zu einer Fehlermeldung führen, dass die Ränder zu schmal sind, um die Daten darzustellen. Die Lösung für dieses Problem besteht darin, zunächst ein Popup-Fenster in R zu öffnen und dann den Plot-Befehl auszuführen. Dies funktioniert mit dem folgenden Code.
 
-	x11()
-	plot(ls_wien)
+    x11()
+    plot(ls_wien)
 
-While this plot gives us some information about how the individual bands of the satellite scene look like, they are still somehow disappointing, as we normally would prefer to see a true-color-visualization of the satellite scene. That is, a visualization that imitates the impression that we create with our visual perception.
+Diese Darstellung liefert uns zwar einige Informationen darüber, wie die einzelnen Bänder der Satellitenaufnahme aussehen, ist aber dennoch etwas enttäuschend, da wir normalerweise eine Echtfarben-Visualisierung der Satellitenaufnahme bevorzugen würden. Das heißt, eine Visualisierung, die den Eindruck nachahmt, den wir mit unserer visuellen Wahrnehmung erzeugen.
 
-For such a plot we need a different plotting command which is provided by the *raster* package:
+Für eine solche Darstellung benötigen wir einen anderen Plot-Befehl, der vom *raster*-Paket bereitgestellt wird:
 
 	plotRGB(ls_wien, r=3, g=2, b=1, stretch="hist")
 
-The plotRGB command requires several settings as seen in the code. The first variable is the image to be plotted. Then we have to define which bands of the image should be plotted as the three available colors r = red, g = green, b = blue. In our case, we assign the correct Landsat bands to the the corresponding visualization colors. That is, we assign the Landsat band collecting information about light in the red portion of the spectrum to the red visualization, the green Landsat channel to the green visualization and the blue Landsat channel to the blue visualization. Finally, we have to define a method for stretching the image (pixel) values to the available visualization range. In our case we tell the plotting command to use a histogram ("hist") created by a representative sample of pixels of the image to automatically find a suitable stretch-setting. More detailed information about the plotRGB command can be obtained using the help-function of R which can be accessed for the plotRGB command using.
+Der Befehl `plotRGB` erfordert mehrere Einstellungen, wie im Code zu sehen ist. Die erste Variable ist das darzustellende Bild. Anschließend müssen wir festlegen, welche Bänder des Bildes als die drei verfügbaren Farben r = rot, g = grün, b = blau dargestellt werden sollen. In unserem Fall ordnen wir die richtigen Landsat-Bänder den entsprechenden Darstellungsfarben zu. Das heißt, wir ordnen das Landsat-Band, das Informationen über Licht im roten Bereich des Spektrums sammelt, der roten Darstellung zu, den grünen Landsat-Kanal der grünen Darstellung und den blauen Landsat-Kanal der blauen Darstellung. Schließlich müssen wir eine Methode definieren, um die Bildwerte (Pixelwerte) auf den verfügbaren Visualisierungsbereich zu strecken. In unserem Fall weisen wir den Plot-Befehl an, ein Histogramm („hist“) zu verwenden, das aus einer repräsentativen Stichprobe von Bildpixeln erstellt wurde, um automatisch eine geeignete Streckungseinstellung zu finden. Detailliertere Informationen zum Befehl plotRGB erhalten Sie über die Hilfefunktion von R, die SIE für den Befehl plotRGB über
 
 	?plotRGB
 
-Running the command with these settings will result in an image as shown below. This image more or less matches our visual perception (that is, what we would see when we would fly across this area with an airplane or a space rocket and the atmosphere would be very clear). 
+aufrufen können.
+
+Wenn Sie den Befehl mit diesen Einstellungen ausführen, erhalten Sie ein Bild wie unten dargestellt. Dieses Bild entspricht mehr oder weniger unserer visuellen Wahrnehmung (das heißt, dem, was wir sehen würden, wenn wir mit einem Flugzeug oder einer Weltraumrakete über dieses Gebiet fliegen würden und die Atmosphäre sehr klar wäre). 
 
 ![](Tut_1_Fig_4.png)
 
-Such images can directly be interpreted - green areas typically refer to vegetation, blue areas to water and the white areas to snow or in this case clouds.
+Solche Bilder lassen sich direkt interpretieren – grüne Bereiche stehen typischerweise für Vegetation, blaue Bereiche für Wasser und die weißen Bereiche für Schnee oder in diesem Fall für Wolken.
 
-While these settings are great, as we can directly interpret the information, there is one additional combination of bands that is frequently used in studies related to vegetation. As we have learned in the course, vegetation has a very strong reflection in the near-infrared portion of the light. However, so far this information is not used in the visualization as we currently only use the red, the green and the blue channel of the Landsat image. We will now change this by replacing the red-channel with the near-infrared channel, the green with the red channel and the blue with the green channel. The corresponding command looks like this:
+Diese Einstellungen sind zwar komfortabel, da wir die Informationen direkt interpretieren können, doch gibt es eine weitere Kombination von Bändern, die in Studien zur Vegetation häufig verwendet wird. Wie wir im Kurs gelernt haben, reflektiert Vegetation sehr stark im nahen Infrarotbereich des Lichts. Bislang wird diese Information jedoch nicht in der Visualisierung genutzt, da wir derzeit nur den roten, den grünen und den blauen Kanal des Landsat-Bildes verwenden. Wir werden dies nun ändern, indem wir den roten Kanal durch den Nahinfrarotkanal, den grünen durch den roten Kanal und den blauen durch den grünen Kanal ersetzen. Der entsprechende Befehl sieht wie folgt aus:
 
 	plotRGB(ls_wien, r=4, g=3, b=2, stretch="hist")
 
-The resulting image is displayed below. 
+Das resultierende Bild ist unten dargestellt. 
 
 ![](Tut_1_Fig_5.png)
 
-In this image, vegetation now appear in red colors while greenish areas indicate areas without vegetation. Water bodies will appear very dark as most of the electromagnet radiation is absorbed by water in the near-infrared portion of the light while the highest reflection of water occurs in the blue channel which is not  considered in this visualization option.
+In diesem Bild erscheint die Vegetation nun in Rottönen, während grünliche Bereiche auf vegetationsfreie Gebiete hinweisen. Gewässer erscheinen sehr dunkel, da der größte Teil der elektromagnetischen Strahlung im nahen Infrarotbereich vom Wasser absorbiert wird, während die stärkste Reflexion des Wassers im Blaukanal auftritt, der bei dieser Visualisierungsoption nicht berücksichtigt wird.
 
-#### Exercise: Explore visualization settings #####
+#### Übung: Visualisierungseinstellungen erkunden #####
 
-To practise a bit the so far learned commands, try to load the second image provided in the downloaded data (stored in the folder **Landsat/D310**). Store the second image in a variable named **ls_d310**. Try to play around a bit more with the **plotRGB** command and try out differing visualization settings (for example modify the channels used for plotting and see how the image colors change).
+Um die bisher erlernten Befehle ein wenig zu üben, versuche, das zweite Bild aus den heruntergeladenen Daten zu laden. Speichern Sie das zweite Bild in einer Variablen namens **ls9_wien**. Experimentieren Sie noch ein wenig mit dem Befehl **plotRGB** und probieren Sie verschiedene Visualisierungseinstellungen aus (ändern Sie beispielsweise die für die Darstellung verwendeten Kanäle und beobachten Sie, wie sich die Farben des Bildes verändern).
 
 ### Step 3: Clipping Landsat data ###
 
