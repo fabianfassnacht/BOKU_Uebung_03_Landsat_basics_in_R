@@ -36,7 +36,7 @@ Bitte laden Sie die oben verlinkten Dateien herunter und speichern Sie sie in ei
 
 **Abbildung 1: Die entpackte Landsat-Dateien**
 
-Innerhalb dieses Ordners erstellen wir nun einen neuen Ordner, den wir "Bands" nennen (rechtsklick => Neu => Ordner). Dann kopieren wir die 6 Hauptbänder (markiert mit 1 in Abbildung 1) von Landsat 8/9 (der Schritt ist derselbe, unabhängig davon ob man das Landsat 8 oder Landsat 9 Bild verwendet) in den soeben erstellten Ordner. Wenn wir diesen Ordner nun öffnen sollte das zu einer Situation führen wie sie in Abbildung 2 dargestellt ist.
+Innerhalb dieses Ordners erstellen wir nun einen neuen Ordner, den wir "bands" nennen (rechtsklick => Neu => Ordner). Dann kopieren wir die 6 Hauptbänder (markiert mit 1 in Abbildung 1) von Landsat 8/9 (der Schritt ist derselbe, unabhängig davon ob man das Landsat 8 oder Landsat 9 Bild verwendet) in den soeben erstellten Ordner. Wenn wir diesen Ordner nun öffnen sollte das zu einer Situation führen wie sie in Abbildung 2 dargestellt ist.
 
 ![](Fig_02.png)
 
@@ -44,7 +44,7 @@ Innerhalb dieses Ordners erstellen wir nun einen neuen Ordner, den wir "Bands" n
 
 Nun haben wir alles vorbereitet, um das Satellitenbild in R zu laden.
 
-### Schritt 2: Laden der Landsat-Daten ###
+### Schritt 3: Starten von R-Studio und erste Schritte ###
 
 Wir starten nun das Programm R-Studio indem wir im Startmenü von windows "Rstudio" eintippen und das entsprechende Symbol klicken (Abbildung 3).
 
@@ -52,28 +52,45 @@ Wir starten nun das Programm R-Studio indem wir im Startmenü von windows "Rstud
 
 **Abbildung 3: Starten von R-Studio**
 
+An diesem Punkt gehe ich davon aus, dass Sie die Hausaufgabe von letzter Woche durchgearbeitetin Form des Tutorials auf dieser Webseite: 
 
+https://rspatial.org/intr/2-basic-data-types.html
 
-Laden Sie als ersten Schritt alle erforderlichen R-Pakete, indem Sie den folgenden Code ausführen:
+durchgearbeitet haben. Sollten Sie dies nicht getan haben, würde ich raten dies nun zuerst zu tun, um den nachfolgenden Schritten gut folgen zu können. Ich gehe an dieser Stelle davon aus, dass Sie wissen, wie man Code in R-Studio ausführt und sie ein Grundverständnis dafür besitzen was Variablen sind und wie man mit diesen in R umgehen kann.
 
-require(terra)
+**Wichtige allgemeine Tipps zum Arbeiten mit R**
+
+Vermutlich mindestens 90% aller Fehlermeldungen in R hängen mit einem der im folgenden gelisteten Punkte zusammen. Sollten Sie eine Fehlermeldung erhalten, so überprüfen sie bitte zuerst ob eine dieser Punkte das Problem sein könnte:
+
+1. Der Pfad zu Dateien ist falsch (darauf achten entweder den kompletten Pfad zu einer Datei anzugeben, oder dass der aktuelle "Arbeitsraum" von R dem Ordner entspricht wo die entsprechende Datei liegt)
+2. Variablennamen sind falsch geschrieben (**ACHTUNG:** R unterscheidet zwischen groß- und kleinschreibung; d.h., die variable "insekten" ist nicht dasselbe wie die Variable "Insekten" oder "inSekten")
+3. Ein Paket ist nicht geladen (wenn sie versuchen einen Befehl anzuwenden, der in R nur über ein Paket zur Verfügung gestellt werden kann, können sie irreführende Fehlermeldungen erhalten)
+4. Ein- oder Ausgangsdaten sind in einem falschen Datenformat (z.B. eine Tabelle kann nicht als Bild abgepeichert werden)
+
+Das Ziel im Folgenden ist nicht, dass Sie sich den Code komplett selbst erarbeiten, sondern, dass sie ihn ausführen können und so anpassen, dass sie mit eigenen Daten dieselben Prozessierungen durchführen können.
+
+### Schritt 4: Laden der Landsat-Daten ###
+
+Als ersten Schritt laden wir das R-Paket "terra" welche die wichtigsten Funktionen für die Verarbeitung von geocodierten Bildern/Rasterdaten in R beinhaltet:
+
+	require(terra)
 
 R gibt eine Warnmeldung aus, falls ein Paket noch nicht installiert ist. Ist dies der Fall, installieren Sie die Pakete bitte entweder über das Hauptmenü von RStudio, indem Sie **„Tools“ =>** **„Install packages“** auswählen und den Anweisungen im angezeigten Dialog folgen, oder indem Sie den entsprechenden R-Code zur Installation der Pakete in die Konsole eingeben. Um beispielsweise das Paket „terra“ zu installieren, verwenden Sie den folgenden Code:
 
-	install.packages(„raster“)    
+	install.packages(„terra“)    
 
-Nachdem alle Pakete erfolgreich installiert wurden, laden Sie die Bilder in zwei Schritten. Speichern Sie zunächst die vollständigen Dateipfade aller Landsat-Bänder in einer Textvariablen mit dem Befehl:
+Nachdem alle Pakete erfolgreich installiert wurden, laden wir das erste Satellitenbild in zwei Schritten. Dafür speichern wir zunächst die vollständigen Dateipfade aller Landsat-Bänder, die wir soeben in den "bands"-Ordner kopiert haben in einer Textvariable. Wir führen folgenden Befehl aus:
 
-    bandnames <- list.files(„D:/remote_sensing/Landsat/D239“, pattern="\\.tif$", full.names = T)
+    bandnames <- list.files(„D:/remote_sensing/Landsat/Bands“, pattern="\\.tif$", full.names = T)
 	bandnames
 
-Der im obigen Code angegebene Dateipfad sollte so geändert werden, dass er mit dem Pfad übereinstimmt, unter dem Sie die entsprechenden Dateien auf Ihrem Computer gespeichert haben. Wenden Sie anschließend den Befehl „stack“ des Raster-Pakets an, um das Bild in ein R-Rasterobjekt zu laden:
+Der im obigen Code angegebene Dateipfad sollte so geändert werden, dass er mit dem Pfad übereinstimmt, unter dem Sie die entsprechenden Dateien auf Ihrem Computer gespeichert haben. Wenden Sie anschließend den Befehl „rast“ des terra-Pakets an, um das Bild in ein R-Rasterobjekt zu laden:
 
-    ls_d239 <- stack(bandnames)
+    ls_wien <- rast(bandnames)
 	
 Der Befehl „stack“ lädt noch nicht den gesamten Datensatz in den Speicher, sondern liest lediglich die Metadaten der Datei und stellt Verknüpfungen zu den Daten auf der Festplatte her. Führen Sie abschließend den Variablennamen aus, um eine Zusammenfassung der Rasterdatei zu erhalten:
 
-    ls_d239
+    ls_wien
 
 Dies sollte eine Konsolenausgabe wie die folgende ergeben:
 
@@ -85,7 +102,7 @@ Dies sollte eine Konsolenausgabe wie die folgende ergeben:
 
 After loading the Landsat scene, we would like to have a first glance how the image looks like. There are two basic options for plotting the satellite scene in R. The first option uses the code:
 
-	plot(ls_d239)
+	plot(ls_wien)
 
 With this code, all bands of the satellite scene will be individually plotted next to each other in a matrix of plots as shown below. 
 
@@ -94,13 +111,13 @@ With this code, all bands of the satellite scene will be individually plotted ne
 In some cases, executing the above code may result in an error message that the margins are too small to plot the data. The solution to this problem is to first open a pop-up plotting window in R and then execute the plot commant. This works by using the following code.
 
 	x11()
-	plot(ls_d239)
+	plot(ls_wien)
 
 While this plot gives us some information about how the individual bands of the satellite scene look like, they are still somehow disappointing, as we normally would prefer to see a true-color-visualization of the satellite scene. That is, a visualization that imitates the impression that we create with our visual perception.
 
 For such a plot we need a different plotting command which is provided by the *raster* package:
 
-	plotRGB(ls_d239, r=3, g=2, b=1, stretch="hist")
+	plotRGB(ls_wien, r=3, g=2, b=1, stretch="hist")
 
 The plotRGB command requires several settings as seen in the code. The first variable is the image to be plotted. Then we have to define which bands of the image should be plotted as the three available colors r = red, g = green, b = blue. In our case, we assign the correct Landsat bands to the the corresponding visualization colors. That is, we assign the Landsat band collecting information about light in the red portion of the spectrum to the red visualization, the green Landsat channel to the green visualization and the blue Landsat channel to the blue visualization. Finally, we have to define a method for stretching the image (pixel) values to the available visualization range. In our case we tell the plotting command to use a histogram ("hist") created by a representative sample of pixels of the image to automatically find a suitable stretch-setting. More detailed information about the plotRGB command can be obtained using the help-function of R which can be accessed for the plotRGB command using.
 
@@ -114,7 +131,7 @@ Such images can directly be interpreted - green areas typically refer to vegetat
 
 While these settings are great, as we can directly interpret the information, there is one additional combination of bands that is frequently used in studies related to vegetation. As we have learned in the course, vegetation has a very strong reflection in the near-infrared portion of the light. However, so far this information is not used in the visualization as we currently only use the red, the green and the blue channel of the Landsat image. We will now change this by replacing the red-channel with the near-infrared channel, the green with the red channel and the blue with the green channel. The corresponding command looks like this:
 
-	plotRGB(ls_d239, r=4, g=3, b=2, stretch="hist")
+	plotRGB(ls_wien, r=4, g=3, b=2, stretch="hist")
 
 The resulting image is displayed below. 
 
@@ -137,7 +154,7 @@ As first step, we will load the shapefile by executing the following command:
 	# set wd to shapefile
 	setwd("D:/remote_sensing/Landsat/Shape")
 	# load Shapefile 
-	vec<-readOGR(".","area2")
+	vec<-vect(".","area2")
 
 Executing this commant will result in the following console output:
 
@@ -153,7 +170,7 @@ This will result in the following console output which gives us information abou
 
 Next, we will plot the shapefile over the Landsat image to see whether the two datasets match and which part of the satellite scene we will clip. This required the following commands:
 
-	plotRGB(ls_d239, r=4, g=3, b=2, stretch="hist")
+	plotRGB(ls_wien, r=4, g=3, b=2, stretch="hist")
 	plot(vec, add=T, col="red")
 
 and should results in the image below.
@@ -179,13 +196,13 @@ We can see in the console output the maximum extent that is covered by the shape
 In the next step, we will use this extent-variable to clip the satellite scene:
 
 	setwd("D:/remote_sensing/Landsat/Output")
-	ls_d239_clip <- crop(ls_d239, e, filename="ls_d239_clipped.tif", overwrite=TRUE)
+	ls_wien_clip <- crop(ls_wien, e, filename="ls_wien_clipped.tif", overwrite=TRUE)
 
 This process will now clip the Landsat scene using the extent stored in the variable e and save the clipped image into the variable ls_d239 _clip. Additionally, a new tif-file will be created on the hard-disk and stored into the last defined path (in the example, we switch the folder before running the clip command to control where the clippped files are stored).
 
 After the clipping, we can have a look at the clipped satellite scene using the plotRGB command:
 
-	plotRGB(ls_d239_clip, r=3, g=2, b=1, stretch="hist")
+	plotRGB(ls_wien_clip, r=3, g=2, b=1, stretch="hist")
 
 We can now see, that area covered by the clipped satellite scene is a lot smaller than our original scene. On the other hand, more details become visible in the plotted image.
 
@@ -196,7 +213,7 @@ We can now see, that area covered by the clipped satellite scene is a lot smalle
 To clip the raster file to the exact shape of the polygon, only one additional step is required. Basically, the clipping procedure remains the same but after the image has been clipped to the rectangular extent of the shapefile, the remainding pixels that are not located within the polygon are masked out using the **mask** command of the *raster* package. The results in the following code:
 
 	setwd("D:/remote_sensing/Landsat/Output")
-	ls_d239_clip2 <- mask(ls_d239_clip, vec)
+	ls_wien_clip2 <- mask(ls_wien_clip, vec)
 
 The masking procedure may take quite a long time depending on the computer's performance. In the end the image should look like this:
 
@@ -271,168 +288,3 @@ To save this image, we can either define a filename in the **mask()**-function a
 We may want to change the current path to an output folder before saving the raster file. You can use the **setwd()**-function to achieve this. 
 
 
-### STEP 5: Simple change detection using image differencing ###
-
-In this step, we will use simple arithmetic operations to perform a change detection using the two Landsat images. "Change detection" is a general term for a big family of methodical approaches to identify areas in images that have changed from one acquisition date to another. As heard in the theoretical lecture, such changes can be due to various reasons, including phenological changes, land-use or and/or land-cover changes, catastropic events, natural succession, and so on.
-
-#### NIR difference image ####
-
-We will start with the probably simplest change detection approach: Image differencing.
-
-Image differencing bases on the assumption that changes occuring between two image acquisition dates can be identified by simply substracting one image from the other image. Areas that did not change should have very similar reflectance values and the difference image should hence depict a value close to zero.
-
-On the contrary, if changes have occurred, the difference image will depict values that are clearly deviating from zero.
-
-So let us try this with our two Landsat images. One thing we have to consider is that we cannot simply substract a complete image from the other but we should rather work on an individual channel level. Here, we will hence first extract the near-infrared (nir) channel of both images and then substract the second image from the first. To extract the nir channel we use:
-
-	nir_d239 <- ls_d239_clip2[[4]]
-	nir_d310 <- d310_masked[[4]]
-
-By using the doubled squared brackets [[]], we can access individual bands of a raster stack. After extracting the nir bands, we can calculate and plot the difference image using:
-
-	nir_diff <- nir_d239 - nir_d310
-	plot(nir_diff)
-
-which will result in the following image:
-
-![](Tut_1_Fig_17.png)
-
-Most of the values of the image are comparably close to zero, as indicated by the greenish colours, however, there are also some parts in the image that show clear changes (see for example the yellow area marked with the red box). A difference of around -5000 is very remarkable as the overall valid value range of the Landsat data lays between 0 and 10000 (10000 indicating a reflectance of 100% which is normally by far not reached by natural surfaces). If we want to make more details visible in the plot, we also have the option to change the plotted range of values and hence increase the contrast for lower vlaues.
-
-We can do this modifying the **plot()**-command to:
-
-	plot(nir_diff, zlim=c(-2000,2000))
-
-By providing user-defined limits for the z-dimension (=pixel values) we can force the plot command to use its full color range to plot values between the given two values. Values lower than -2000 and higher than 2000 will no further be separable. This results in a new plot which looks like this:
-
-![](Tut_1_Fig_18.png)
-
-It now becomes clear that actually quite many areas showed a notable difference between the first and second image as now shown by the green colors which indicate a positive difference in most areas. This seems to be a plausible result as most of our satellite scene is dominated by vegetation and the first image's acquisition date was day 239 = 27th of August (late summer) and second image's acquisition date was day 310 = 6th of November (autumn). Hence, the reduction of reflectance in the nir channel is most likely connected to the senescence of the leaves of most parts of the vegetation which most likely began shortly after the first image was acquired.
-
-#### NDVI difference image #####
-
-We will now further verify these results by repeating the analysis but replacing the nir channels with normalized difference vegetation index (NDVI) images. The NDVI is probably the most famous metric obtained from optical remote sensing data that is frequently used as a general measure of photosynthetic activity / vegetation abundance. The NDVI is often also referred to as a "Vegetation Index". More information about the NDVI can for example be found under the following links:
-
-[https://en.wikipedia.org/wiki/Normalized_difference_vegetation_index](https://en.wikipedia.org/wiki/Normalized_difference_vegetation_index)
-
-[https://earthobservatory.nasa.gov/Features/MeasuringVegetation/measuring_vegetation_2.php](https://earthobservatory.nasa.gov/Features/MeasuringVegetation/measuring_vegetation_2.php)
-
-One important information given in both articles found via the links is the formula to calculate the NDVI. The formula is defined as:
-
-NDVI = (**Refl** NIR - **Refl** RED) / (**Refl** NIR + **Refl** RED)
-
-These kind of equations are referred to as "normalized differences". One key-advantage of these normalized differences is that the value range of vegetation indices calculated in these manners are standardized between -1 and 1. 
-
-To calculate NDVIs from our Landsat images we execute the following code:
-
-	ndvi_d239 <- (ls_d239_clip2[[4]]-ls_d239_clip2[[3]])/(ls_d239_clip2[[4]]+ls_d239_clip2[[3]])
-	ndvi_d310 <- (d310_masked[[4]]-d310_masked[[3]])/(d310_masked[[4]]+d310_masked[[3]])
-
-Then we can have a look at the two NDVI images - we again adapt the z-lim range and furthermore add a new command to plot the two plots side-by-side:
-
-	par(mfrow=c(1,2))
-	plot(ndvi_d239, zlim=c(-0.5,1), main="Day 239")
-	plot(ndvi_d310, zlim=c(-0.5,1), main="Day 310")
-
-This will result in the following plot:
-
-![](Tut_1_Fig_19.png)
-
-We can now calculate and plot the NDVI difference image by running:
-
-	ndvi_diff <- ndvi_d239 - ndvi_d310
-	plot(ndvi_diff)
-
-which will result in the following plot:
-
-![](Tut_1_Fig_20.png)
-
-As a final step, we will now identify areas that show a very high NDVI difference by applying a threshold. That is, we will build a binary mask in which all areas that have a NDVI difference > 0.5 will be displayed as 1 and all other values as 0. In this case, we will use the **abs()**-function (returning absolute values) to consider both negative and positive differences. We run the following code:
-
-	ndvi_gt_0_5 <- abs(ndvi_diff) > 0.5 
-	plot(ndvi_gt_0_5)
-
-![](Tut_1_Fig_21.png)
-
-In this image, the grey areas have a NDVI difference smaller than 0.5 while the green areas have NDVI differences that are higher than 0.5. The white areas refer to the NAs in the second image due to cloud-cover.
-
-### STEP 5: Unsupervised classification ###
-
-As last part of this first Tutorial, we will apply an unsupervised classification to one of the Landsat scenes. An unsupervised classification is sometimes also referred to a clustering process and attempts to sort the observations of a dataset into meaningful classes. The number of classes is normally user-defined and can either be a fixed number or a range with a defined minimum and maximum number of classes. In our case, we will apply a very common algorithm called k-means.
-
-The function is called **kmeans()** in R and was originally not developed to particularly work with raster data. However, there is a small work-around so that we can still apply it to our datasets. This work-around bases on a transformation of our raster-dataset to a dataframe (a table). Then the kmeans-algorithm is applied to the table, and the results of the clustering are re-transformed to a raster dataset.
-
-Let's start by trying to run the following code:
-
-	class1 <- kmeans(values(ls_d239_clip2), 12, iter.max = 10, nstart = 10)
-
-The code will convert the raster-object to a data.frame and then run the kmeans-algorithm to classify all pixel-values into 12 classes. This attempt will result in an error message:
-
-![](Tut_1_Fig_22.png)
-
-The reason for this is, that our raster data contains some NA values (the areas we masked out before). We can verify that our dataset contains NA values by running the following command:
-
-	table(is.na(values(ls_d239_clip2)))
-
-This command is a nested command, we use the **values()**-function to access only the pixel values of the raster-dataset (and ignore the other properties of the raster object), then we apply the **is.na()** function to check for each raster value whether it is NA or not. Finally, we use the **table()**-function to translate the output of the **is.na()**-function (which is table with as many entries as the raster dataset has pixels) into a contingency table that returns to counts of each factor level (in this case there are only two differing values/factors: TRUE and FALSE). The console output looks like this:
-
-![](Tut_1_Fig_23.png)
-
-So we now know, that the NAs are problematic for the kmeeans algorithm. We will hence remove them from our dataset. As first step, we will copy our image into a new variable to not change the original image. This can be achieved using the code:
-
-	d239_no_na <- ls_d239_clip2
-
-Then we replace all NA values of the image with the value 99999 by running:
-
-	d239_no_na[is.na(d239_masked_no_na)] <- 99999
-
-After running this code, we can recheck the NA situation:
-
-	table(is.na(values(d239_no_na)))
-
-This will return:
-
-![](Tut_1_Fig_24.png)
-
-Hence, we have cleaned the dataset from all NA values. We will now try to re-run the kmeans-algorithm by executing:
-
-	class1 <- kmeans(values(d239_no_na), 12, iter.max = 10, nstart = 10)
-
-This time, no error message will occur. It could be that some warning messages are printed, but we will ignore these for the moment. After the kmeans-algorithm is completed, we will have a new object called **class1**. We can have a closer look at the structure of this oject using:
-
-	str(class1)
-
-This will return the following console output:
-
-![](Tut_1_Fig_25.png)
-
-For us particularly interesting are the entries **cluster** and **centers**. The former contains our classification results, that is, the id of the cluster to which each pixel has been assigned to. On the other hand, the **centers** entry contains more detailed information about the individual clusters by providing information about the center-value for each band of the image. That is why this entry has 12 rows (12 clusters) and 6 columns (the six Landsat bands).
-
-We can access the individual entries of the classification object by running for example:
-
-	class1$centers
-
-which will return the just described table with 12 rows and 6 columns:
-
-![](Tut_1_Fig_26.png)
-
-The values from your own run, are likely to deviate from the ones you can see depicted here as the kmeans-algorithm contains a random component. That means, each run of the kmeans-algorithm will result in a slightly differing outcome. This can be addressed by using the **set.seed()**-function. But this will be discussed with more details in a later Tutorial.
-
-As next step, we will now retransform the classification results of the kmeans-algorithm to a raster image. The easiest way to do this is to overwrite the values of a band from the original image. We can achieve this by first copying a band of the original image into a new variable:
-
-	class1_out <- ls_d239_clip2[[1]]
-
-And then overwriting the values of this band with the clustering results:
-
-	values(class1_out) <- class1$cluster
-	plot(class1_out)
-
-The result is a new raster image indicating the cluster id (cluster 1- cluster 12) of each pixel:
-
-![](Tut_1_Fig_27.png)	
-
-We can now save this raster file using:
-
-	writeRaster(class1_out,"12_classes_ls5.tif", overwrite=TRUE)
-
-As next step, we can open the original image as well as the results of the unsupervised classification in QGIS and examine whether we can allocate the individual clusters to land-cover types.
