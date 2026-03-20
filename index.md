@@ -19,10 +19,6 @@ Die in diesem Tutorial verwendeten Datensätze sind hier verfügbar:
 
 https://drive.google.com/drive/folders/1cKngQQMJCMTNfnh1OXvygAX5ntseIJ8X?usp=sharing
 
-Bitte laden Sie die Dateien herunter und speichern Sie sie die gepackte Datei in einem Ordner, den sie wiederfinden können. Danach navigieren Sie in den Ordner und entpacken Sie die Datei. Dies sollte zu einem neuen Ordner führen, der eine grössere Zahl an Dateien enthält (Abbildung 1).
-
-![](Fig_01.png)
-
 
 ### Verwendete Datensätze ###
 
@@ -34,10 +30,29 @@ Es ist sehr lohnenswert, sich diese Informationen anzusehen, da sie der Schlüss
 
 ### Schritt 1: Vorbereitung der Satellitenbilddaten
 
+Bitte laden Sie die oben verlinkten Dateien herunter und speichern Sie sie in einem Ordner, den sie wiederfinden können. Danach navigieren Sie in den Ordner und entpacken Sie die zwei gepackten Dateien. Dies sollte zu zwei neuen Ordnern führen, die jeweils eine grössere Zahl an Dateien enthält (Abbildung 1 zeigt ein Beispiel für die Landsat 8 Szene).
 
+![](Fig_01.png)
 
+**Abbildung 1: Die entpackte Landsat-Dateien**
+
+Innerhalb dieses Ordners erstellen wir nun einen neuen Ordner, den wir "Bands" nennen (rechtsklick => Neu => Ordner). Dann kopieren wir die 6 Hauptbänder (markiert mit 1 in Abbildung 1) von Landsat 8/9 (der Schritt ist derselbe, unabhängig davon ob man das Landsat 8 oder Landsat 9 Bild verwendet) in den soeben erstellten Ordner. Wenn wir diesen Ordner nun öffnen sollte das zu einer Situation führen wie sie in Abbildung 2 dargestellt ist.
+
+![](Fig_02.png)
+
+**Abbildung 2: Die sechs Landsat-Bänder in einem separaten Ordner**
+
+Nun haben wir alles vorbereitet, um das Satellitenbild in R zu laden.
 
 ### Schritt 2: Laden der Landsat-Daten ###
+
+Wir starten nun das Programm R-Studio indem wir im Startmenü von windows "Rstudio" eintippen und das entsprechende Symbol klicken (Abbildung 3).
+
+![](Fig_03.png)
+
+**Abbildung 3: Starten von R-Studio**
+
+
 
 Laden Sie als ersten Schritt alle erforderlichen R-Pakete, indem Sie den folgenden Code ausführen:
 
