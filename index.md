@@ -1,28 +1,30 @@
+
+Fernerkundung in der Landschaftsplanung - Tag 3 - Prozessierung von Landsatdaten in R
+
+**Autoren:** Dieses Tutorial wurde von Fabian Fassnacht entwickelt.
+
 ## Basic processing of Landsat data with R ##
 
 
 ### Overview ###
 
-In this lecture you will learn the basic handling of Landsat data (as one example of multispectral satellite data). The learned processing steps include:
+In diesem Tutorial lernen Sie den grundlegenden Umgang mit Landsat-Daten in der Programmierumgebung R (als ein Beispiel für multispektrale Satellitendaten). Zu den behandelten Verarbeitungsschritten gehören:
 
-- Loading Landsat data
-- Visualizing Landsat data
-- Clipping Landsat data with a Shapefile
-- Masking Landsat data
-- Calculating Vegetation indices
-- Unsupervised classification of Landsat data  
+- Laden von Landsat-Daten
+- Visualisieren von Landsat-Daten
+- Zuschneiden von Landsat-Daten mit einer Vektordatei
+- Maskieren von Landsat-Daten
 
-The datasets applied in this tutorial are available here:
+Die in diesem Tutorial verwendeten Datensätze sind hier verfügbar:
 
-[https://drive.google.com/open?id=1goGeRNGYaMSUBR7st7SOQ5P7GqxQPmP6](https://drive.google.com/open?id=1goGeRNGYaMSUBR7st7SOQ5P7GqxQPmP6)
+https://drive.google.com/drive/folders/1cKngQQMJCMTNfnh1OXvygAX5ntseIJ8X?usp=sharing
 
 
-### Datasets used in this Tutorial ###
+### Verwendete Datensätze ###
 
-In this tutorial we will use two Landsat-8 scenes. To be more precise, we will make use of the Landsat 8 surface reflectance product which can be downloaded from the USGS earth explorer webpage [https://earthexplorer.usgs.gov/](https://earthexplorer.usgs.gov/) .
-How to download the corresponding images will be demonstrated in the course.
+In diesem Tutorial verwenden wir ein Landsat-8 und ein Landsat-9-Bild. Genauer gesagt nutzen wir Produkte, die Informationen zur Oberflächenreflexion enthalten. DIe Bilder wurden von der USGS Earth Explorer-Webseite [https://earthexplorer.usgs.gov/](https://earthexplorer.usgs.gov/) heruntergeladen. Wie man die entsprechenden Bilder herunterlädt, wird in den Hausaufgaben von dieser Woche behandelt (siehe Ende des Tutorials).
 
-Detailed information about the structure of the datasets can be found here: [https://www.usgs.gov/landsat-missions/product-information](https://www.usgs.gov/landsat-missions/product-information "Landsat 8 product guide")
+Detaillierte Informationen zur Struktur der zwei Datensätze finden Sie hier: [https://www.usgs.gov/landsat-missions/product-information](https://www.usgs.gov/landsat-missions/product-information „Landsat-8-Produktleitfaden“)
 
 ### Step 1: Loading Landsat data ###
 
