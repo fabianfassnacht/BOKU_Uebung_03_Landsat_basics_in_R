@@ -145,68 +145,68 @@ In diesem Bild erscheint die Vegetation nun in Rottönen, während grünliche Be
 
 Um die bisher erlernten Befehle ein wenig zu üben, versuche, das zweite Bild aus den heruntergeladenen Daten zu laden. Speichern Sie das zweite Bild in einer Variablen namens **ls9_wien**. Experimentieren Sie noch ein wenig mit dem Befehl **plotRGB** und probieren Sie verschiedene Visualisierungseinstellungen aus (ändern Sie beispielsweise die für die Darstellung verwendeten Kanäle und beobachten Sie, wie sich die Farben des Bildes verändern).
 
-### Step 3: Clipping Landsat data ###
+### Schritt 3: Zuschneiden von Landsat-Daten ###
 
-#### Approach 1: Clipping to the maximum extent ####
+#### Ansatz 1: Zuschneiden auf die maximale Ausdehnung ####
 
-Quite often our area of interest is smaller than a complete Landsat scene which covers several thousand square kilometers. In this part of the Tutorial, we will hence learn how to clip-out a part of the Landsat scene using a polygon-shapefile.
+Häufig ist unser Untersuchungsgebiet kleiner als eine vollständige Landsat-Szene, die mehrere tausend Quadratkilometer umfasst. In diesem Teil des Tutorials lernen wir daher, wie man mithilfe einer Polygon-Shapefile einen Teil der Landsat-Szene ausschneidet.
 
-As first step, we will load the shapefile by executing the following command:
-	
-	# set wd to shapefile
-	setwd("D:/remote_sensing/Landsat/Shape")
-	# load Shapefile 
-	vec<-vect(".","area2")
+Als ersten Schritt laden wir die Shapefile, indem wir den folgenden Befehl ausführen:
+    
+    # wd auf Shapefile setzen
+    setwd(„D:/remote_sensing/Landsat/Shape“)
+    # Shapefile laden 
+    vec<-vect(„.“,„area2“)
 
-Executing this commant will result in the following console output:
+Die Ausführung dieses Befehls führt zu folgender Konsolenausgabe:
 
 ![](Tut_1_Fig_6.png)
 
-A basic summary of the loaded shapefile can be obtained by simply running its variable name. In our case:
+Eine grundlegende Zusammenfassung des geladenen Shapefiles erhält man, indem man einfach dessen Variablennamen aufruft. In unserem Fall:
 
-	vec
+    vec
 
-This will result in the following console output which gives us information about the extent of the loaded Shapefile, the number of features (polygons) and the coordinate reference system:
+Dies führt zu folgender Konsolenausgabe, die uns Informationen über die Ausdehnung des geladenen Shapefiles, die Anzahl der Objekte (Polygone) und das Koordinatenreferenzsystem liefert:
 
 ![](Tut_1_Fig_7.png)
 
-Next, we will plot the shapefile over the Landsat image to see whether the two datasets match and which part of the satellite scene we will clip. This required the following commands:
+Als Nächstes werden wir das Shapefile über das Landsat-Bild legen, um zu sehen, ob die beiden Datensätze übereinstimmen und welchen Teil der Satellitenaufnahme wir ausschneiden werden. Dazu waren die folgenden Befehle erforderlich:
 
-	plotRGB(ls_wien, r=4, g=3, b=2, stretch="hist")
-	plot(vec, add=T, col="red")
+    plotRGB(ls_wien, r=4, g=3, b=2, stretch="hist")
+    plot(vec, add=T, col="red")
 
-and should results in the image below.
+Dies sollte zu dem unten gezeigten Bild führen.
 
 ![](Tut_1_Fig_8.png)
 
-We can now clearly see that the shapefile overlaps with the image and we should hence be able to use it to clip the Landsat dataset.
+Wir können nun deutlich erkennen, dass sich das Shapefile mit dem Bild überschneidet, und sollten es daher nutzen können, um den Landsat-Datensatz zu beschneiden.
 
-In this first step, we will use the maximum extent of the shapefile polygon to clip the satellite image. There is also another option to clip the image using the exact shape of the polygon, but we will have a look at this option later.
+In diesem ersten Schritt verwenden wir die maximale Ausdehnung des Shapefile-Polygons, um das Satellitenbild zu beschneiden. Es gibt auch eine weitere Möglichkeit, das Bild anhand der exakten Form des Polygons zu beschneiden, aber darauf werden wir später noch eingehen.
  
-For the first approach, we will first derive the extent of the Shapefile using the command:
+Für den ersten Ansatz leiten wir zunächst die Ausdehnung der Shapefile mithilfe des Befehls ab:
 
-	e <- extent(vec)
+    e <- extent(vec)
 
-If we run the variable using
+Wenn wir die Variable mit
 
-	e
+    e
 
-We can see in the console output the maximum extent that is covered by the shapefile.
+ausführen, sehen wir in der Konsolenausgabe die maximale Ausdehnung, die von der Shapefile abgedeckt wird.
 
 ![](Tut_1_Fig_9.png)
 
-In the next step, we will use this extent-variable to clip the satellite scene:
+Im nächsten Schritt verwenden wir diese Ausdehnungsvariable, um die Satellitenaufnahme zu beschneiden:
 
-	setwd("D:/remote_sensing/Landsat/Output")
-	ls_wien_clip <- crop(ls_wien, e, filename="ls_wien_clipped.tif", overwrite=TRUE)
+    setwd(„D:/remote_sensing/Landsat/Output“)
+    ls_wien_clip <- crop(ls_wien, e, filename="ls_wien_clipped.tif", overwrite=TRUE)
 
-This process will now clip the Landsat scene using the extent stored in the variable e and save the clipped image into the variable ls_d239 _clip. Additionally, a new tif-file will be created on the hard-disk and stored into the last defined path (in the example, we switch the folder before running the clip command to control where the clippped files are stored).
+Dieser Vorgang schneidet nun die Landsat-Aufnahme anhand des in der Variablen e gespeicherten Ausmaßes zu und speichert das zugeschnittene Bild in der Variablen ls_d239_clip. Zusätzlich wird eine neue TIF-Datei auf der Festplatte erstellt und im zuletzt definierten Pfad gespeichert (im Beispiel wechseln wir den Ordner, bevor wir den Befehl zum Zuschneiden ausführen, um zu steuern, wo die zugeschnittenen Dateien gespeichert werden).
 
-After the clipping, we can have a look at the clipped satellite scene using the plotRGB command:
+Nach dem Zuschneiden können wir uns die zugeschnittene Satellitenaufnahme mit dem Befehl `plotRGB` ansehen:
 
 	plotRGB(ls_wien_clip, r=3, g=2, b=1, stretch="hist")
 
-We can now see, that area covered by the clipped satellite scene is a lot smaller than our original scene. On the other hand, more details become visible in the plotted image.
+Wir sehen nun, dass der von der beschnittenen Satellitenaufnahme abgedeckte Bereich deutlich kleiner ist als unsere ursprüngliche Aufnahme. Andererseits werden im ausgegebenen Bild mehr Details sichtbar.
 
 ![](Tut_1_Fig_10.png)
 
