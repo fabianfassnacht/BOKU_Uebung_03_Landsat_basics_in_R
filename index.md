@@ -106,7 +106,7 @@ Nachdem wir die Landsat-Aufnahme geladen haben, möchten wir uns einen ersten Ei
 
 Mit diesem Code werden alle Bänder der Satellitenaufnahme einzeln nebeneinander in einer Matrix dargestellt, wie unten gezeigt. 
 
-![](Tut_1_Fig_05.png)
+![](Fig_05.png)
 
 **Abbildung 5: Ausgabe des Standart Plot Befehls in R für ein Multiband-Raster**
 
@@ -129,7 +129,7 @@ aufrufen können.
 
 Wenn Sie den Befehl mit diesen Einstellungen ausführen, erhalten Sie ein Bild wie unten dargestellt. Dieses Bild entspricht mehr oder weniger unserer visuellen Wahrnehmung (das heißt, dem, was wir sehen würden, wenn wir mit einem Flugzeug oder einer Weltraumrakete über dieses Gebiet fliegen würden und die Atmosphäre sehr klar wäre). 
 
-![](Tut_1_Fig_06.png)
+![](Fig_06.png)
 
 **Abbildung 6: Darstellung des Echtfarbenkomposit-Plots in R**
 
@@ -141,7 +141,7 @@ Diese Einstellungen sind zwar komfortabel, da wir die Informationen direkt inter
 
 Das resultierende Bild ist unten dargestellt. 
 
-![](Tut_1_Fig_07.png)
+![](Fig_07.png)
 
 **Abbildung 7: Darstellung eines Falschfarbenkomposit-Plots in R**
 
@@ -155,18 +155,14 @@ Um die bisher erlernten Befehle ein wenig zu üben, versuchen Sie, das zweite be
 
 #### Ansatz 1: Zuschneiden auf die maximale Ausdehnung ####
 
-Häufig ist unser Untersuchungsgebiet kleiner als eine vollständige Landsat-Szene, die mehrere tausend Quadratkilometer umfasst. In diesem Teil des Tutorials lernen wir daher, wie man mithilfe einer Polygon-Shapefile einen Teil der Landsat-Szene ausschneidet.
+Häufig ist unser Untersuchungsgebiet kleiner als eine vollständige Landsat-Szene, die mehrere tausend Quadratkilometer umfasst. In diesem Teil des Tutorials lernen wir daher, wie man mithilfe einer Polygon-Vektordatei einen Teil der Landsat-Szene ausschneidet. Die hier verwendete Vektordatei beinhaltet die Grenzen der Wiender Stadtbezirke.
 
-Als ersten Schritt laden wir die Shapefile, indem wir den folgenden Befehl ausführen:
+Als ersten Schritt laden wir die Vektordatei, indem wir den folgenden Befehl ausführen:
     
-    # wd auf Shapefile setzen
-    setwd(„D:/remote_sensing/Landsat/Shape“)
-    # Shapefile laden 
+    # Arbeitsverzeichnis auf den Ordner setzen in dem die Vektordatei liegt
+    setwd("D:/remote_sensing/Landsat/Shape")
+    # Vektordatei laden 
     vec<-vect("Wien_Bezirke.gpkg")
-
-Die Ausführung dieses Befehls führt zu folgender Konsolenausgabe:
-
-![](Tut_1_Fig_08.png)
 
 Eine grundlegende Zusammenfassung des geladenen Shapefiles erhält man, indem man einfach dessen Variablennamen aufruft. In unserem Fall:
 
@@ -174,16 +170,20 @@ Eine grundlegende Zusammenfassung des geladenen Shapefiles erhält man, indem ma
 
 Dies führt zu folgender Konsolenausgabe, die uns Informationen über die Ausdehnung des geladenen Shapefiles, die Anzahl der Objekte (Polygone) und das Koordinatenreferenzsystem liefert:
 
-![](Tut_1_Fig_09.png)
+![](Fig_08.png)
 
-Als Nächstes werden wir das Shapefile über das Landsat-Bild legen, um zu sehen, ob die beiden Datensätze übereinstimmen und welchen Teil der Satellitenaufnahme wir ausschneiden werden. Dazu waren die folgenden Befehle erforderlich:
+**Abbildung 8: Konsolenausgabe nach Aufrufen der Vektordatei in R**
+
+Als Nächstes werden wir das Shapefile über das Landsat-Bild legen, um zu sehen, ob die beiden Datensätze übereinstimmen und welchen Teil der Satellitenaufnahme wir ausschneiden werden. Dazu sind die folgenden Befehle erforderlich:
 
    	plotRGB(ls_wien, r=4, g=3, b=2, stretch="hist")
 	plot(vec, add=T, col="red")
 
 Dies sollte zu dem unten gezeigten Bild führen.
 
-![](Tut_1_Fig_10.png)
+![](Fig_09.png)
+
+**Abbildung 9: Echtfarbenkomposit überlagert von der Vektordatei**
 
 Wir können nun deutlich erkennen, dass sich das Shapefile mit dem Bild überschneidet, und sollten es daher nutzen können, um den Landsat-Datensatz zu beschneiden.
 
@@ -199,7 +199,9 @@ Wenn wir die Variable mit
 
 ausführen, sehen wir in der Konsolenausgabe die maximale Ausdehnung, die von der Shapefile abgedeckt wird.
 
-![](Tut_1_Fig_11.png)
+![](Fig_10.png)
+
+**Abbildung 10: Konsolenausgabe zur Extent Variable**
 
 Im nächsten Schritt verwenden wir diese Ausdehnungsvariable, um die Satellitenaufnahme zu beschneiden:
 
@@ -214,19 +216,25 @@ Nach dem Zuschneiden können wir uns die zugeschnittene Satellitenaufnahme mit d
 
 Wir sehen nun, dass der von der beschnittenen Satellitenaufnahme abgedeckte Bereich deutlich kleiner ist als unsere ursprüngliche Aufnahme und im ausgegebenen Bild mehr Details sichtbar werden.
 
-![](Tut_1_Fig_12.png)
+![](Fig_11.png)
+
+**Abbildung 11: Echtfarbendarstellung des zugeschnittenen Satellitenbildes**
 
 #### Ansatz 2: Zuschneiden auf den exakten Umriss der Shapefile-Datei ####
 
 Um die Rasterdatei genau auf die Form des Polygons zu beschneiden, ist nur ein zusätzlicher Schritt erforderlich. Grundsätzlich bleibt das Beschneidungsverfahren dasselbe, doch nachdem das Bild auf die rechteckige Ausdehnung des Shapefiles beschnitten wurde, werden die verbleibenden Pixel, die sich nicht innerhalb des Polygons befinden, mit dem Befehl **mask** des *raster*-Pakets ausgeblendet. Das ergibt den folgenden Code:
 
-	setwd(„D:/remote_sensing/Landsat/Output“)
     ls_wien_clip2 <- mask(ls_wien_clip, vec)
 
-Der Maskierungsvorgang kann je nach Rechnerleistung recht lange dauern. Am Ende sollte das Bild wie folgt aussehen:
+Der Maskierungsvorgang kann je nach Rechnerleistung ein wenig dauern. Wenn wir das Bild wiederum mit folgenden Befehl plotten: 
 
-![](Tut_1_Fig_13.png)
+	plotRGB(ls_wien_clip2, r=3, g=2, b=1, stretch="hist")
 
+sollte das Bild wie folgt aussehen:
+
+![](Fig_12.png)
+
+**Abbildung 12: Echtfarbendarstellung des zugeschnittenen Satellitenbildes**
 
 ### SCHRITT 4: Anwenden einer Wolkenmaske ###
 
