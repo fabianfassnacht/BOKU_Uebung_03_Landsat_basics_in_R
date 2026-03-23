@@ -52,11 +52,11 @@ Wir starten nun das Programm R-Studio indem wir im Startmenü von windows "Rstud
 
 **Abbildung 3: Starten von R-Studio**
 
-An diesem Punkt gehe ich davon aus, dass Sie die Hausaufgabe von letzter Woche durchgearbeitetin Form des Tutorials auf dieser Webseite: 
+An diesem Punkt gehe ich davon aus, dass Sie die Hausaufgabe von letzter Woche in Form des Tutorials auf dieser Webseite: 
 
 https://rspatial.org/intr/2-basic-data-types.html
 
-durchgearbeitet haben. Sollten Sie dies nicht getan haben, würde ich raten dies nun zuerst zu tun, um den nachfolgenden Schritten gut folgen zu können. Ich gehe an dieser Stelle davon aus, dass Sie wissen, wie man Code in R-Studio ausführt und sie ein Grundverständnis dafür besitzen was Variablen sind und wie man mit diesen in R umgehen kann.
+durchgearbeitet haben. Sollten Sie dies nicht getan haben, würde ich raten dies nun zuerst zu tun, um den nachfolgenden Schritten gut folgen zu können. Es wird im Folgenden vorausgesetzt, dass Sie wissen, wie man Code in R-Studio ausführt und sie ein Grundverständnis dafür besitzen was Variablen sind und wie man mit diesen in R umgehen kann.
 
 **Wichtige allgemeine Tipps zum Arbeiten mit R**
 
@@ -94,9 +94,8 @@ Der Befehl „stack“ lädt noch nicht den gesamten Datensatz in den Speicher, 
 
 Dies sollte eine Konsolenausgabe wie die folgende ergeben:
 
-![](Tut_1_Fig_
+![](Fig_04.png)
 
-Übersetzt mit DeepL.com (kostenlose Version)
 
 ### Schritt 2:  Visualisierung von Landsat-Daten ###
 
@@ -106,7 +105,7 @@ Nachdem wir die Landsat-Aufnahme geladen haben, möchten wir uns einen ersten Ei
 
 Mit diesem Code werden alle Bänder der Satellitenaufnahme einzeln nebeneinander in einer Matrix aus Diagrammen dargestellt, wie unten gezeigt. 
 
-![](Tut_1_Fig_3.png)
+![](Tut_1_Fig_05.png)
 
 In einigen Fällen kann die Ausführung des obigen Codes zu einer Fehlermeldung führen, dass die Ränder zu schmal sind, um die Daten darzustellen. Die Lösung für dieses Problem besteht darin, zunächst ein Popup-Fenster in R zu öffnen und dann den Plot-Befehl auszuführen. Dies funktioniert mit dem folgenden Code.
 
@@ -115,7 +114,7 @@ In einigen Fällen kann die Ausführung des obigen Codes zu einer Fehlermeldung 
 
 Diese Darstellung liefert uns zwar einige Informationen darüber, wie die einzelnen Bänder der Satellitenaufnahme aussehen, ist aber dennoch etwas enttäuschend, da wir normalerweise eine Echtfarben-Visualisierung der Satellitenaufnahme bevorzugen würden. Das heißt, eine Visualisierung, die den Eindruck nachahmt, den wir mit unserer visuellen Wahrnehmung erzeugen.
 
-Für eine solche Darstellung benötigen wir einen anderen Plot-Befehl, der vom *raster*-Paket bereitgestellt wird:
+Für eine solche Darstellung benötigen wir einen anderen Plot-Befehl, der vom *terra*-Paket bereitgestellt wird:
 
 	plotRGB(ls_wien, r=3, g=2, b=1, stretch="hist")
 
