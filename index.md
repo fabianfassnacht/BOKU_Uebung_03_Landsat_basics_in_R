@@ -6,7 +6,7 @@ Fernerkundung in der Landschaftsplanung - Tag 3 - Prozessierung von Landsatdaten
 ## Grundlegende Prozessierung von Landsat-Daten with R ##
 
 
-### Overview ###
+### Lernziele und Überblick ###
 
 In diesem Tutorial lernen Sie den grundlegenden Umgang mit Landsat-Daten (als ein Beispiel für multispektrale Satellitendaten) in der Programmierumgebung R . Zu den behandelten Verarbeitungsschritten gehören:
 
@@ -15,12 +15,11 @@ In diesem Tutorial lernen Sie den grundlegenden Umgang mit Landsat-Daten (als ei
 - Zuschneiden von Landsat-Daten mit einer Vektordatei
 - Maskieren von Landsat-Daten
 
+### Verwendete Datensätze ###
+
 Die in diesem Tutorial verwendeten Datensätze sind hier verfügbar:
 
 https://drive.google.com/drive/folders/1cKngQQMJCMTNfnh1OXvygAX5ntseIJ8X?usp=sharing
-
-
-### Verwendete Datensätze ###
 
 In diesem Tutorial verwenden wir ein Landsat-8 und ein Landsat-9-Bild. Genauer gesagt nutzen wir Satellitenbild-Produkte, die Informationen zur Oberflächenreflexion enthalten. DIe Bilder wurden von der USGS Earth Explorer-Webseite [https://earthexplorer.usgs.gov/](https://earthexplorer.usgs.gov/) heruntergeladen. Wie man die entsprechenden Bilder herunterlädt, wird in den Hausaufgaben von dieser Woche behandelt (siehe Ende des Tutorials).
 
