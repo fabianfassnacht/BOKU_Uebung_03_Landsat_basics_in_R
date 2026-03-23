@@ -96,29 +96,32 @@ Dies sollte eine Konsolenausgabe wie die Folgende ergeben:
 
 ![](Fig_04.png)
 
+**Abbildung 4: Konsolenausgabe nach Laden des Landsatbildes**
 
 ### Schritt 2:  Visualisierung von Landsat-Daten ###
 
-Nachdem wir die Landsat-Aufnahme geladen haben, möchten wir uns einen ersten Eindruck davon verschaffen, wie das Bild aussieht. Es gibt zwei grundlegende Möglichkeiten, die Satellitenaufnahme in R darzustellen. Die erste Möglichkeit nutzt den folgenden Code:
+Nachdem wir die Landsat-Aufnahme geladen haben, möchten wir uns einen ersten Eindruck davon verschaffen, wie das Bild aussieht. Es gibt zwei grundlegende Möglichkeiten, die Satellitenaufnahme in R visuell darzustellen. Die erste Möglichkeit nutzt den folgenden Code:
 
     plot(ls_wien)
 
-Mit diesem Code werden alle Bänder der Satellitenaufnahme einzeln nebeneinander in einer Matrix aus Diagrammen dargestellt, wie unten gezeigt. 
+Mit diesem Code werden alle Bänder der Satellitenaufnahme einzeln nebeneinander in einer Matrix dargestellt, wie unten gezeigt. 
 
 ![](Tut_1_Fig_05.png)
+
+**Abbildung 5: Ausgabe des Standart Plot Befehls in R für ein Multiband-Raster**
 
 In einigen Fällen kann die Ausführung des obigen Codes zu einer Fehlermeldung führen, dass die Ränder zu schmal sind, um die Daten darzustellen. Die Lösung für dieses Problem besteht darin, zunächst ein Popup-Fenster in R zu öffnen und dann den Plot-Befehl auszuführen. Dies funktioniert mit dem folgenden Code.
 
     x11()
     plot(ls_wien)
 
-Diese Darstellung liefert uns zwar einige Informationen darüber, wie die einzelnen Bänder der Satellitenaufnahme aussehen, ist aber dennoch etwas enttäuschend, da wir normalerweise eine Echtfarben-Visualisierung der Satellitenaufnahme bevorzugen würden. Das heißt, eine Visualisierung, die den Eindruck nachahmt, den wir mit unserer visuellen Wahrnehmung erzeugen.
+Diese Darstellung liefert uns zwar einige Informationen darüber, wie die einzelnen Bänder der Satellitenaufnahme aussehen, ist aber dennoch etwas enttäuschend, da wir normalerweise eine Echtfarben-Visualisierung der Satellitenaufnahme bevorzugen würden. Das heißt, eine Visualisierung, die den Eindruck nachahmt, den wir mit unserer visuellen Wahrnehmung erzeugen (vergleiche Tutorial von letzter Woche in SNAP mit dem Echtfarbenkomposit).
 
 Für eine solche Darstellung benötigen wir einen anderen Plot-Befehl, der vom *terra*-Paket bereitgestellt wird:
 
 	plotRGB(ls_wien, r=3, g=2, b=1, stretch="hist")
 
-Der Befehl `plotRGB` erfordert mehrere Einstellungen, wie im Code zu sehen ist. Die erste Variable ist das darzustellende Bild. Anschließend müssen wir festlegen, welche Bänder des Bildes als die drei verfügbaren Farben r = rot, g = grün, b = blau dargestellt werden sollen. In unserem Fall ordnen wir die richtigen Landsat-Bänder den entsprechenden Darstellungsfarben zu. Das heißt, wir ordnen das Landsat-Band, das Informationen über Licht im roten Bereich des Spektrums sammelt, der roten Darstellung zu, den grünen Landsat-Kanal der grünen Darstellung und den blauen Landsat-Kanal der blauen Darstellung. Schließlich müssen wir eine Methode definieren, um die Bildwerte (Pixelwerte) auf den verfügbaren Visualisierungsbereich zu strecken. In unserem Fall weisen wir den Plot-Befehl an, ein Histogramm („hist“) zu verwenden, das aus einer repräsentativen Stichprobe von Bildpixeln erstellt wurde, um automatisch eine geeignete Streckungseinstellung zu finden. Detailliertere Informationen zum Befehl plotRGB erhalten Sie über die Hilfefunktion von R, die SIE für den Befehl plotRGB über
+Der Befehl `plotRGB` erfordert mehrere Einstellungen, wie im Code zu sehen ist. Die erste Variable ist das darzustellende Bild. Anschließend müssen wir festlegen, welche Bänder des Bildes als die drei verfügbaren Farben r = rot, g = grün, b = blau dargestellt werden sollen. In unserem Fall ordnen wir die Landsat-Bänder, die den visuell wahrnehmbaren Spektralbereichen entsprechen den entsprechenden Darstellungsfarben zu. Das heißt, wir ordnen das Landsat-Band, das Informationen über Licht im roten Bereich des Spektrums sammelt, der roten Darstellung zu, den grünen Landsat-Kanal der grünen Darstellung und den blauen Landsat-Kanal der blauen Darstellung. Schließlich müssen wir eine Methode definieren, um die Bildwerte (Pixelwerte) auf den verfügbaren Visualisierungsbereich zu strecken (mehr dazu bald in der Vorlesung). In unserem Fall weisen wir den Plot-Befehl an, ein Histogramm („hist“) zu verwenden, das aus einer repräsentativen Stichprobe von Bildpixeln erstellt wurde, um automatisch eine geeignete Streckungseinstellung zu finden. Detailliertere Informationen zum Befehl plotRGB erhalten Sie über die Hilfefunktion von R, die SIE für den Befehl plotRGB über
 
 	?plotRGB
 
@@ -128,9 +131,11 @@ Wenn Sie den Befehl mit diesen Einstellungen ausführen, erhalten Sie ein Bild w
 
 ![](Tut_1_Fig_06.png)
 
-Solche Bilder lassen sich direkt interpretieren – grüne Bereiche stehen typischerweise für Vegetation, blaue Bereiche für Wasser und die weißen Bereiche für Schnee oder in diesem Fall für Wolken.
+**Abbildung 6: Darstellung des Echtfarbenkomposit-Plots in R**
 
-Diese Einstellungen sind zwar komfortabel, da wir die Informationen direkt interpretieren können, doch gibt es eine weitere Kombination von Bändern, die in Studien zur Vegetation häufig verwendet wird. Wie wir im Kurs gelernt haben, reflektiert Vegetation sehr stark im nahen Infrarotbereich des Lichts. Bislang wird diese Information jedoch nicht in der Visualisierung genutzt, da wir derzeit nur den roten, den grünen und den blauen Kanal des Landsat-Bildes verwenden. Wir werden dies nun ändern, indem wir den roten Kanal durch den Nahinfrarotkanal, den grünen durch den roten Kanal und den blauen durch den grünen Kanal ersetzen. Der entsprechende Befehl sieht wie folgt aus:
+Solche Bilder lassen sich direkt interpretieren – grüne Bereiche stehen z.B. typischerweise für Vegetation, blaue Bereiche für Wasser und die weißen Bereiche für Schnee oder Wolken.
+
+Diese Einstellungen sind zwar komfortabel, da wir die Informationen direkt interpretieren können, doch gibt es eine weitere Kombination von Bändern, die in Studien zur Vegetation häufig verwendet wird. Wie wir im Kurs bereits kurz gelernt haben, reflektiert Vegetation sehr stark im nahen Infrarotbereich des Lichts. Bislang wird diese Information jedoch nicht in der Visualisierung genutzt, da wir derzeit nur den roten, den grünen und den blauen Kanal des Landsat-Bildes verwenden. Wir werden dies nun ändern, indem wir den roten Kanal durch den Nahinfrarotkanal, den grünen durch den roten Kanal und den blauen durch den grünen Kanal ersetzen. Der entsprechende Befehl sieht wie folgt aus:
 
 	plotRGB(ls_wien, r=4, g=3, b=2, stretch="hist")
 
@@ -138,11 +143,13 @@ Das resultierende Bild ist unten dargestellt.
 
 ![](Tut_1_Fig_07.png)
 
+**Abbildung 7: Darstellung eines Falschfarbenkomposit-Plots in R**
+
 In diesem Bild erscheint die Vegetation nun in Rottönen, während grünliche Bereiche auf vegetationsfreie Gebiete hinweisen. Gewässer erscheinen sehr dunkel, da der größte Teil der elektromagnetischen Strahlung im nahen Infrarotbereich vom Wasser absorbiert wird, während die stärkste Reflexion des Wassers im Blaukanal auftritt, der bei dieser Visualisierungsoption nicht berücksichtigt wird.
 
 #### Übung: Visualisierungseinstellungen erkunden #####
 
-Um die bisher erlernten Befehle ein wenig zu üben, versuchen Sie, das zweite Bild aus den heruntergeladenen Daten zu laden. Speichern Sie das zweite Bild in einer Variablen namens **ls9_wien**. Experimentieren Sie noch ein wenig mit dem Befehl **plotRGB** und probieren Sie verschiedene Visualisierungseinstellungen aus (ändern Sie beispielsweise die für die Darstellung verwendeten Kanäle und beobachten Sie, wie sich die Farben des Bildes verändern).
+Um die bisher erlernten Befehle ein wenig zu üben, versuchen Sie, das zweite bereitgestellte Satellitenbild (Landsat 9) zu laden. Speichern Sie das zweite Bild in einer Variablen namens **ls9_wien**. Experimentieren Sie noch ein wenig mit dem Befehl **plotRGB** und probieren Sie verschiedene Visualisierungseinstellungen aus (ändern Sie beispielsweise die für die Darstellung verwendeten Kanäle und beobachten Sie, wie sich die Farben des Bildes verändern).
 
 ### Schritt 3: Zuschneiden von Landsat-Daten ###
 
