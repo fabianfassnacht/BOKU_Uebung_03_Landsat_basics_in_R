@@ -127,7 +127,7 @@ Der Befehl `plotRGB` erfordert mehrere Einstellungen, wie im Code zu sehen ist. 
 
 aufrufen können.
 
-Wenn Sie den Befehl mit diesen Einstellungen ausführen, erhalten Sie ein Bild wie unten dargestellt. Dieses Bild entspricht mehr oder weniger unserer visuellen Wahrnehmung (das heißt, dem, was wir sehen würden, wenn wir mit einem Flugzeug oder einer Weltraumrakete über dieses Gebiet fliegen würden und die Atmosphäre sehr klar wäre). 
+Wenn Sie den Befehl mit diesen Einstellungen ausführen, erhalten Sie ein Bild wie unten dargestellt. Dieses Bild entspricht mehr oder weniger unserer visuellen Wahrnehmung (das heißt, dem, was wir sehen würden, wenn wir mit einem Flugzeug oder einem Raumschiff über dieses Gebiet fliegen würden und die Atmosphäre sehr klar wäre). 
 
 ![](Fig_06.png)
 
