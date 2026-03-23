@@ -145,7 +145,7 @@ Das resultierende Bild ist unten dargestellt.
 
 **Abbildung 7: Darstellung eines Falschfarbenkomposit-Plots in R**
 
-In diesem Bild erscheint die Vegetation nun in Rottönen, während grünliche Bereiche auf vegetationsfreie Gebiete hinweisen. Gewässer erscheinen sehr dunkel, da der größte Teil der elektromagnetischen Strahlung im nahen Infrarotbereich vom Wasser absorbiert wird, während die stärkste Reflexion des Wassers im Blaukanal auftritt, der bei dieser Visualisierungsoption nicht berücksichtigt wird.
+In diesem Bild erscheint die Vegetation nun in Rottönen, während grünliche Bereiche auf vegetationsfreie Gebiete hinweisen. Tiefe Gewässer erscheinen sehr dunkel, da der größte Teil der elektromagnetischen Strahlung im nahen Infrarotbereich vom Wasser absorbiert wird, während die stärkste Reflexion des Wassers im Blaukanal auftritt, der bei dieser Visualisierungsoption nicht berücksichtigt wird (die im Gebiet sichtbaren Seen erscheinen eher blau, was darauf schließen lässt, dass die Seen einen relativ hohen Gehalt an Algen oder Vegetation aufweisen und daher im Echtfarbenbild eher grünlich erscheinen).
 
 #### Übung: Visualisierungseinstellungen erkunden #####
 
