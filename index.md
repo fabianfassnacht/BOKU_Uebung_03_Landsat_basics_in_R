@@ -8,7 +8,7 @@ Fernerkundung in der Landschaftsplanung - Tag 3 - Prozessierung von Landsatdaten
 
 ### Overview ###
 
-In diesem Tutorial lernen Sie den grundlegenden Umgang mit Landsat-Daten in der Programmierumgebung R (als ein Beispiel für multispektrale Satellitendaten). Zu den behandelten Verarbeitungsschritten gehören:
+In diesem Tutorial lernen Sie den grundlegenden Umgang mit Landsat-Daten (als ein Beispiel für multispektrale Satellitendaten) in der Programmierumgebung R . Zu den behandelten Verarbeitungsschritten gehören:
 
 - Laden von Landsat-Daten
 - Visualisieren von Landsat-Daten
@@ -22,11 +22,11 @@ https://drive.google.com/drive/folders/1cKngQQMJCMTNfnh1OXvygAX5ntseIJ8X?usp=sha
 
 ### Verwendete Datensätze ###
 
-In diesem Tutorial verwenden wir ein Landsat-8 und ein Landsat-9-Bild. Genauer gesagt nutzen wir Produkte, die Informationen zur Oberflächenreflexion enthalten. DIe Bilder wurden von der USGS Earth Explorer-Webseite [https://earthexplorer.usgs.gov/](https://earthexplorer.usgs.gov/) heruntergeladen. Wie man die entsprechenden Bilder herunterlädt, wird in den Hausaufgaben von dieser Woche behandelt (siehe Ende des Tutorials).
+In diesem Tutorial verwenden wir ein Landsat-8 und ein Landsat-9-Bild. Genauer gesagt nutzen wir Satellitenbild-Produkte, die Informationen zur Oberflächenreflexion enthalten. DIe Bilder wurden von der USGS Earth Explorer-Webseite [https://earthexplorer.usgs.gov/](https://earthexplorer.usgs.gov/) heruntergeladen. Wie man die entsprechenden Bilder herunterlädt, wird in den Hausaufgaben von dieser Woche behandelt (siehe Ende des Tutorials).
 
-Detaillierte Informationen (Level-2 Scene-based Science Products-Handbücher) zur Struktur der zwei Datensätze finden Sie hier: [https://www.usgs.gov/landsat-missions/landsat-science-products](https://www.usgs.gov/media/files/landsat-8-9-collection-2-level-2-science-product-guide)
+Detaillierte Informationen (Level-2 Scene-based Science Products-Handbücher) zur Struktur und der Prozessierungskette der zwei Datensätze finden Sie hier: [https://www.usgs.gov/landsat-missions/landsat-science-products](https://www.usgs.gov/media/files/landsat-8-9-collection-2-level-2-science-product-guide)
 
-Es ist sehr lohnenswert, sich diese Informationen anzusehen, da sie der Schlüssel dafür sind die heruntergeladenen Produkte vollkommen zu verstehen. Sie werden sehen, dass die heruntergeladenen Datensätze aus einer Vielzahl an Dateien bestehen und die Information was diese Dateien genau enthalten finden sich alle in den oben genannten **Level-2 Scene-based Science Products**-Handbüchern.
+Es ist sehr lohnenswert und wichtig, sich diese Informationen anzusehen, da sie der Schlüssel dafür sind die heruntergeladenen Produkte vollkommen zu verstehen. Sie werden sehen, dass die heruntergeladenen Datensätze aus einer Vielzahl an Dateien bestehen und die Information was diese Dateien genau enthalten finden sich alle in den oben genannten **Level-2 Scene-based Science Products**-Handbüchern.
 
 ### Schritt 1: Vorbereitung der Satellitenbilddaten
 
@@ -36,7 +36,7 @@ Bitte laden Sie die oben verlinkten Dateien herunter und speichern Sie sie in ei
 
 **Abbildung 1: Die entpackte Landsat-Dateien**
 
-Innerhalb dieses Ordners erstellen wir nun einen neuen Ordner, den wir "bands" nennen (rechtsklick => Neu => Ordner). Dann kopieren wir die 6 Hauptbänder (markiert mit 1 in Abbildung 1) von Landsat 8/9 (der Schritt ist derselbe, unabhängig davon ob man das Landsat 8 oder Landsat 9 Bild verwendet) in den soeben erstellten Ordner. Wenn wir diesen Ordner nun öffnen sollte das zu einer Situation führen wie sie in Abbildung 2 dargestellt ist.
+Innerhalb dieses Ordners erstellen wir nun einen neuen Ordner, den wir "bands" nennen (rechtsklick => Neu => Ordner). Dann kopieren wir die 6 Hauptbänder (markiert mit 1 in Abbildung 1) von Landsat 8/9 (der Schritt ist derselbe, unabhängig davon ob man das Landsat 8 oder Landsat 9 Bild verwendet) in den soeben erstellten Ordner. Wenn wir diesen Ordner nun öffnen, sollte das zu einer Situation führen wie sie in Abbildung 2 dargestellt ist (die tatsächliche Darstellung kann vom gezeigten Bild abweichen, je nachdem wie die Einstellungen des Windows Explorers / Filemanagers sind).
 
 ![](Fig_02.png)
 
@@ -56,22 +56,22 @@ An diesem Punkt gehe ich davon aus, dass Sie die Hausaufgabe von letzter Woche i
 
 https://rspatial.org/intr/2-basic-data-types.html
 
-durchgearbeitet haben. Sollten Sie dies nicht getan haben, würde ich raten dies nun zuerst zu tun, um den nachfolgenden Schritten gut folgen zu können. Es wird im Folgenden vorausgesetzt, dass Sie wissen, wie man Code in R-Studio ausführt und sie ein Grundverständnis dafür besitzen was Variablen sind und wie man mit diesen in R umgehen kann.
+durchgearbeitet haben. Sollten Sie dies nicht getan haben, würde ich raten dies nun zuerst zu tun, um den nachfolgenden Schritten gut folgen zu können. Es wird im Folgenden vorausgesetzt, dass Sie wissen, wie man Code in R-Studio ausführt und Sie ein Grundverständnis dafür besitzen was Variablen sind und wie man mit diesen in R umgehen kann.
 
 **Wichtige allgemeine Tipps zum Arbeiten mit R**
 
-Vermutlich mindestens 90% aller Fehlermeldungen in R hängen mit einem der im folgenden gelisteten Punkte zusammen. Sollten Sie eine Fehlermeldung erhalten, so überprüfen sie bitte zuerst ob eine dieser Punkte das Problem sein könnte:
+Vermutlich mindestens 90% aller Fehlermeldungen in R hängen mit einem der im Folgenden gelisteten Punkte zusammen. Sollten Sie eine Fehlermeldung erhalten, so überprüfen sie bitte zuerst ob eine dieser Punkte das Problem sein könnte:
 
-1. Der Pfad zu Dateien ist falsch (darauf achten entweder den kompletten Pfad zu einer Datei anzugeben, oder dass der aktuelle "Arbeitsraum" von R dem Ordner entspricht wo die entsprechende Datei liegt)
-2. Variablennamen sind falsch geschrieben (**ACHTUNG:** R unterscheidet zwischen groß- und kleinschreibung; d.h., die variable "insekten" ist nicht dasselbe wie die Variable "Insekten" oder "inSekten")
-3. Ein Paket ist nicht geladen (wenn sie versuchen einen Befehl anzuwenden, der in R nur über ein Paket zur Verfügung gestellt werden kann, können sie irreführende Fehlermeldungen erhalten)
+1. Der Pfad zu Dateien ist falsch (darauf achten entweder den kompletten Pfad zu einer Datei anzugeben, oder dass der aktuelle "Arbeitsraum" von R dem Ordner entspricht wo die entsprechende Datei liegt). Zusätzlich darauf achten, dass die Trennstriche richtig herum sind. Z.B. "D:\Fernerkundung\Daten\Landsat.tif" ist falsch; "D:/Fernerkundung/Daten/Landsat.tif" oder alternativ "D:\\Fernerkundung\\Daten\\Landsat.tif" sind richtig.
+2. Variablennamen sind falsch geschrieben (**ACHTUNG:** R unterscheidet zwischen Groß- und Lleinschreibung; d.h., die variable "insekten" ist nicht dasselbe wie die Variable "Insekten" oder "inSekten")
+3. Ein Paket ist nicht geladen (wenn sie versuchen einen Befehl anzuwenden, der in R nur über ein Paket zur Verfügung gestellt werden kann, können Sie irreführende Fehlermeldungen erhalten)
 4. Ein- oder Ausgangsdaten sind in einem falschen Datenformat (z.B. eine Tabelle kann nicht als Bild abgepeichert werden)
 
 Das Ziel im Folgenden ist nicht, dass Sie sich den Code komplett selbst erarbeiten, sondern, dass sie ihn ausführen können und so anpassen, dass sie mit eigenen Daten dieselben Prozessierungen durchführen können.
 
 ### Schritt 4: Laden der Landsat-Daten ###
 
-Als ersten Schritt laden wir das R-Paket "terra" welche die wichtigsten Funktionen für die Verarbeitung von geocodierten Bildern/Rasterdaten in R beinhaltet:
+Als ersten Schritt laden wir das R-Paket "terra" welche die wichtigsten Funktionen für die Verarbeitung von geocodierten Bildern/Rasterdaten sowie Vektordaten in R beinhaltet:
 
 	require(terra)
 
@@ -81,18 +81,18 @@ R gibt eine Warnmeldung aus, falls ein Paket noch nicht installiert ist. Ist die
 
 Nachdem alle Pakete erfolgreich installiert wurden, laden wir das erste Satellitenbild in zwei Schritten. Dafür speichern wir zunächst die vollständigen Dateipfade aller Landsat-Bänder, die wir soeben in den "bands"-Ordner kopiert haben in einer Textvariable. Wir führen folgenden Befehl aus:
 
-    bandnames <- list.files(„D:/remote_sensing/Landsat/Bands“, pattern="\\.tif$", full.names = T)
+    bandnames <- list.files(„D:/remote_sensing/Landsat/Bands“, pattern="\\.TIF$", full.names = T)
 	bandnames
 
-Der im obigen Code angegebene Dateipfad sollte so geändert werden, dass er mit dem Pfad übereinstimmt, unter dem Sie die entsprechenden Dateien auf Ihrem Computer gespeichert haben. Wenden Sie anschließend den Befehl „rast“ des terra-Pakets an, um das Bild in ein R-Rasterobjekt zu laden:
+Der im obigen Code angegebene Dateipfad sollte so geändert werden, dass er mit dem Pfad übereinstimmt, unter dem Sie die entsprechenden Dateien auf Ihrem Computer gespeichert haben. Die Einstellung pattern="\\.TIF$" sorgt dafür, dass nur Dateien die mit der Endung ".TIF" enden berücksichtigt werden und die Einstellung "full.names = T" sorgt dafür, dass der komplette Dateipfad gespeichert wird und nicht nur der Dateiname. Wenden Sie anschließend den Befehl „rast“ des terra-Pakets an, um das Bild in ein R-Rasterobjekt zu laden:
 
     ls_wien <- rast(bandnames)
 	
-Der Befehl „stack“ lädt noch nicht den gesamten Datensatz in den Speicher, sondern liest lediglich die Metadaten der Datei und stellt Verknüpfungen zu den Daten auf der Festplatte her. Führen Sie abschließend den Variablennamen aus, um eine Zusammenfassung der Rasterdatei zu erhalten:
+Der Befehl „rast“ lädt noch nicht den gesamten Datensatz in den Speicher, sondern liest lediglich die Metadaten der Datei und stellt Verknüpfungen zu den Daten auf der Festplatte her. Wichtig ist, dass hierbei alle gelisteten Bänder gestapelt in eine einzelne Variable geladen werden. D.h., wir haben nunr aus unseren 6 einzelnen Rasterdatei eine einzelne Rasterdatei mit sechs Bändern erstellt. Führen Sie abschließend den Variablennamen aus, um eine Zusammenfassung der Rasterdatei zu erhalten:
 
     ls_wien
 
-Dies sollte eine Konsolenausgabe wie die folgende ergeben:
+Dies sollte eine Konsolenausgabe wie die Folgende ergeben:
 
 ![](Fig_04.png)
 
