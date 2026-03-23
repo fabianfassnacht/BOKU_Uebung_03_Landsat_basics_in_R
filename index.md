@@ -243,7 +243,9 @@ Im nächsten Schritt nutzen wir das Qualitätsprodukt, das standardmäßig zusam
 Um die Wolkenmaske zu laden, verwenden wir den bereits bekannten Code zum Laden eines Rasterbildes:
 
     setwd("D:/remote_sensing/Landsat9/")
-	ls9_mask <- stack("LC09_L2SP_190026_20260310_20260311_02_T1_QA_PIXEL")
+	ls9_mask <- rast("LC09_L2SP_190026_20260310_20260311_02_T1_QA_PIXEL")
+
+Wir verwenden hier den "setwd"-Befehl um zuerst in den Ordner zu wechseln in dem sich das Qualitätsproduktraster befindet. Alternativ könnten wir in der nächsten Teile im "rast"-Befehl auch den kompletten Dateipfad zur Datei angeben.
 
 Wir können uns die gerade geladenen Daten ansehen, indem wir das Raster mit folgendem Befehl plotten:
 
@@ -251,14 +253,19 @@ Wir können uns die gerade geladenen Daten ansehen, indem wir das Raster mit fol
 
 Dies führt zu folgendem Bild:
 
-![](Tut_1_Fig_14.png)
+![](Fig_13.png)
+
+**Abbildung 13: Das Qualitätsproduktraster**
 
 Beachten Sie, dass es hier keinen Sinn macht, den Befehl **plotRGB** zu verwenden, da das Wolkenmaskenraster nur eine einzige Rasterebene bzw. einen einzigen Kanal enthält.
 
-Wir sehen, dass das Qualitätsprodukt viele verschiedene Werte enthält, die jedoch trotzdem eher kategorisch als kontinuierlich aussehen. Um zu verstehen, was jede der Werte genau bedeutet, muss man den Leitfaden zur Oberflächenreflexion von Landsat 8 und 9 zu Rate ziehen (Link siehe oben).
+Wir sehen, dass das Qualitätsprodukt viele verschiedene Werte enthält, die jedoch trotzdem eher kategorisch als kontinuierlich aussehen. Dies wird noch deutlicher, wenn man das Raster in QGIS lädt und dort eine kategorische Visualisierung auswählt (Sie können dies gerne testen). Um zu verstehen, was jede der Werte genau bedeutet, muss man den Leitfaden zur Oberflächenreflexion von Landsat 8 und 9 zu Rate ziehen (Link siehe oben).
 
 Hier findet sich im Kapitel zum Qualitätsprodukt (Seite 19 und folgende Seiten) folgende Tabelle: 
-![](Tut_1_Fig_15.png)
+
+![](Fig_14.png)
+
+**Abbildung 14: Informationen zur Bedeutung der Pixelwerte im Qualitätsproduktraster aus dem offizielen Leitfaden des USGS**
 
 Hier können wir nun erkennen, dass klare Pixel ohne Wolken oder sonstige Beeinträchtigungen den Wert "21824" ("Clear with lows set") besitzt. Höhere Werte sind entweder von Wolken oder Wolkenschatten betroffen oder repräsentieren Wasserflächen. Im Folgenden werden wir nun zuerst eine simple Maske anwenden, die alle Pixel, die keine klaren Landpixel repräsentieren ausschließt (d.h., Wasser und von Wolken betroffene Flächen werden maskiert).
 
@@ -272,7 +279,9 @@ Und sehen uns das Ergebnis an
 
 In dieser neuen Ebene sind nun alle Wasserflächen, sowie von Wolken oder Wolkenschatten betroffenen Bereiche mit dem Wert 1 gekennzeichnet, während alle Pixel, die entweder klar oder Gewässer sind, den Wert 0 haben.
 
-![](Tut_1_Fig_16.png)
+![](Fig_15.png)
+
+**Abbildung 15: Darstellung der binären Qualitätsmaske in der klare Pixel und von Wolken und Wasser betroffene Pixel getrennt dargestellt werden** 
 
 Nun können wir diese Maske mit dem folgenden Befehl auf das Landsat-9 Bild  anwenden:
 
@@ -282,11 +291,13 @@ Nun können wir diese Maske mit dem folgenden Befehl auf das Landsat-9 Bild  anw
 
 !! Beachten Sie, dass Sie zunächst das Bild ls9_wien erstellen müssen, indem Sie den oben für das Landsat-8-Bild bereitgestellten Code wie in der Übung beschrieben anpassen – dieser Code ist hier nicht enthalten!! 
 
-Dies führt zu einer neuen Version des Landsat-Bildes, in der alle von Wolken betroffenen Pixel ausgeblendet wurden, indem alle Werte im Landsat-Bild durch NA (= nicht verfügbar) ersetzt wurden.
+Dies führt zu einer neuen Version des Landsat-9 Bildes, in der alle von Wolken betroffenen Pixel ausgeblendet wurden indem alle Werte im Landsat-Bild durch NA (= nicht verfügbar) ersetzt wurden.
 
-![](Tut_1_Fig_17.png)
+![](Tut_1_Fig_16.png)
 
-Um dieses Bild zu speichern, können wir entweder wie zuvor in der **crop()**-Funktion einen Dateinamen in der **mask()**-Funktion angeben oder einen separaten Befehl verwenden:
+**Abbildung 16: Abbildung des wolkenmaskierten Landsat-9 Bildes**
+
+Um dieses Bild zu speichern, können wir entweder wie oben bereits für die **crop()**-Funktion gezeigt, einen Dateinamen in der **mask()**-Funktion angeben oder einen separaten Befehl verwenden:
 
     writeRaster(ls9_wien_masked, filename="Landsat9_cloud_masked.tif", format="GTiff")
 
