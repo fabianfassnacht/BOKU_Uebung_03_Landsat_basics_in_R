@@ -184,7 +184,7 @@ In diesem ersten Schritt verwenden wir die maximale Ausdehnung des Shapefile-Pol
  
 Für den ersten Ansatz leiten wir zunächst die Ausdehnung der Shapefile mithilfe des Befehls ab:
 
-    e <- extent(vec)
+    e <- ext(vec)
 
 Wenn wir die Variable mit
 
@@ -220,25 +220,19 @@ Der Maskierungsvorgang kann je nach Rechnerleistung recht lange dauern. Am Ende 
 
 ![](Tut_1_Fig_11.png)
 
-#### Übung: Zuschneiden #####
-
-Um das Zuschneiden zu üben, versuchen Sie, den Code so anzupassen, dass auch das zweite Landsat-Bild (aus dem Ordner **D310**) mit denselben R-Befehlen zugeschnitten wird. Die zugeschnittene Version dieses zweiten Bildes (die wie das untenstehende Bild aussehen sollte) werden wir im nächsten Schritt verwenden.
-
-![](Tut_1_Fig_12.png)
-
 
 ### SCHRITT 4: Anwenden einer Wolkenmaske ###
 
-Im nächsten Schritt nutzen wir das Wolkenmaskenprodukt, das standardmäßig zusammen mit dem Landsat-8-Oberflächenreflexionsprodukt bereitgestellt wird. Das Wolkenmaskenprodukt befindet sich derzeit im Ordner **Landsat/D310/cl_mask**. Da nur das zweite Landsat-Bild (**D310**) von einigen Wolken betroffen ist, verwenden wir diese Szene als Beispiel.
+Im nächsten Schritt nutzen wir das Wolkenmaskenprodukt, das standardmäßig zusammen mit den Landsat-8 und Landsat-9 Oberflächenreflexionsprodukt bereitgestellt wird. Sie finden das Wolkenmaskenprodukt befindet im selben Ordner wie die Bänder und erkennen es an der Dateiendung **_QA_PIXEL**. Da  das Landsat-9 Bild (**LC09_L2SP_190026_20260310_20260311_02_T1**) stärker von Wolken betroffen ist als das Landsat 8 Bild, verwenden wir diese Szene als Beispiel.
 
 Um die Wolkenmaske zu laden, verwenden wir den bereits bekannten Code zum Laden eines Rasterbildes:
 
-    setwd(„D:/remote_sensing/Landsat/D310/cl_mask“)
-	d310_mask <- stack(„LC81910282015310LGN00_cfmask.tif“)
+    setwd("D:/remote_sensing/Landsat9/")
+	ls9_mask <- stack("LC09_L2SP_190026_20260310_20260311_02_T1_QA_PIXEL")
 
 Wir können uns die gerade geladenen Daten ansehen, indem wir das Raster mit folgendem Befehl plotten:
 
-    plot(d310_mask)
+    plot(ls9_mask)
 
 Dies führt zu folgendem Bild:
 
@@ -246,23 +240,13 @@ Dies führt zu folgendem Bild:
 
 Beachten Sie, dass es hier keinen Sinn macht, den Befehl **plotRGB** zu verwenden, da das Wolkenmaskenraster nur eine einzige Rasterebene bzw. einen einzigen Kanal enthält.
 
-Wir sehen, dass die Wolkenmaskenebene in unserem Fall fünf verschiedene Werte enthält. Um zu verstehen, was jede der fünf Klassen genau bedeutet, muss man den Leitfaden zur Oberflächenreflexion von Landsat 8 zu Rate ziehen (Link siehe oben).
+Wir sehen, dass die Wolkenmaskenebene in unserem Fall fünf verschiedene Werte enthält. Um zu verstehen, was jede der fünf Klassen genau bedeutet, muss man den Leitfaden zur Oberflächenreflexion von Landsat 8 und 9 zu Rate ziehen (Link siehe oben).
 
-Um den Maskierungsprozess effektiver zu gestalten, werden wir nun zunächst die Wolkenmaske auf denselben Ausschnitt zuschneiden wie die bereits zugeschnittenen Landsat-Bilder. Dazu verwenden wir dieselben Befehle, die wir gerade gelernt haben:
-
-    d310_mask_clip <- crop(d310_mask, e)
-    d310_mask_clip2 <- mask(d310_mask_clip, vec)
-	plot(d310_mask_clip2)
-
-Dies sollte zu folgendem Bild führen:
-
-![](Tut_1_Fig_14.png)
-
-Wenn wir dies mit dem Originalbild vergleichen:
+Wenn wir die dargestellte Maske mit dem Originalbild vergleichen:
 
 ![](Tut_1_Fig_12.png)
 
-Wir können daraus schließen, dass der Wert 3 offenbar die Wolkendecke, der Wert 2 Wolkenschatten und der Wert 1 Gewässer bezeichnet. Klare Pixel werden durch den Wert 0 gekennzeichnet. Bitte beachten Sie, dass sich diese Werte je nach der verwendeten Version des Oberflächenreflexionsprodukts ändern können. Es wird dringend empfohlen, diese Informationen im entsprechenden Produktleitfaden zu überprüfen.
+können wir daraus schließen, dass der Wert 3 offenbar die Wolkendecke, der Wert 2 Wolkenschatten und der Wert 1 Gewässer bezeichnet. Klare Pixel werden durch den Wert 0 gekennzeichnet. Bitte beachten Sie, dass sich diese Werte je nach der verwendeten Version des Oberflächenreflexionsprodukts ändern können. Es wird dringend empfohlen, diese Informationen im entsprechenden Produktleitfaden zu überprüfen.
 
 Als nächsten Schritt müssen wir die Wolken maskieren oder alternativ alle Pixel, die weder klar noch Wasser sind. In diesem Fall verfolgen wir den letzteren Ansatz. Dazu erstellen wir zunächst eine binäre Maske aus der Wolkendeckenschicht mit dem Befehl:
 
