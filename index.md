@@ -126,7 +126,7 @@ aufrufen können.
 
 Wenn Sie den Befehl mit diesen Einstellungen ausführen, erhalten Sie ein Bild wie unten dargestellt. Dieses Bild entspricht mehr oder weniger unserer visuellen Wahrnehmung (das heißt, dem, was wir sehen würden, wenn wir mit einem Flugzeug oder einer Weltraumrakete über dieses Gebiet fliegen würden und die Atmosphäre sehr klar wäre). 
 
-![](Tut_1_Fig_4.png)
+![](Tut_1_Fig_06.png)
 
 Solche Bilder lassen sich direkt interpretieren – grüne Bereiche stehen typischerweise für Vegetation, blaue Bereiche für Wasser und die weißen Bereiche für Schnee oder in diesem Fall für Wolken.
 
@@ -136,7 +136,7 @@ Diese Einstellungen sind zwar komfortabel, da wir die Informationen direkt inter
 
 Das resultierende Bild ist unten dargestellt. 
 
-![](Tut_1_Fig_5.png)
+![](Tut_1_Fig_07.png)
 
 In diesem Bild erscheint die Vegetation nun in Rottönen, während grünliche Bereiche auf vegetationsfreie Gebiete hinweisen. Gewässer erscheinen sehr dunkel, da der größte Teil der elektromagnetischen Strahlung im nahen Infrarotbereich vom Wasser absorbiert wird, während die stärkste Reflexion des Wassers im Blaukanal auftritt, der bei dieser Visualisierungsoption nicht berücksichtigt wird.
 
@@ -155,11 +155,11 @@ Als ersten Schritt laden wir die Shapefile, indem wir den folgenden Befehl ausf�
     # wd auf Shapefile setzen
     setwd(„D:/remote_sensing/Landsat/Shape“)
     # Shapefile laden 
-    vec<-vect(„.“,„area2“)
+    vec<-vect("Wien_Bezirke.gpkg")
 
 Die Ausführung dieses Befehls führt zu folgender Konsolenausgabe:
 
-![](Tut_1_Fig_6.png)
+![](Tut_1_Fig_08.png)
 
 Eine grundlegende Zusammenfassung des geladenen Shapefiles erhält man, indem man einfach dessen Variablennamen aufruft. In unserem Fall:
 
@@ -167,16 +167,16 @@ Eine grundlegende Zusammenfassung des geladenen Shapefiles erhält man, indem ma
 
 Dies führt zu folgender Konsolenausgabe, die uns Informationen über die Ausdehnung des geladenen Shapefiles, die Anzahl der Objekte (Polygone) und das Koordinatenreferenzsystem liefert:
 
-![](Tut_1_Fig_7.png)
+![](Tut_1_Fig_09.png)
 
 Als Nächstes werden wir das Shapefile über das Landsat-Bild legen, um zu sehen, ob die beiden Datensätze übereinstimmen und welchen Teil der Satellitenaufnahme wir ausschneiden werden. Dazu waren die folgenden Befehle erforderlich:
 
-    plotRGB(ls_wien, r=4, g=3, b=2, stretch="hist")
-    plot(vec, add=T, col="red")
+   	plotRGB(ls_wien, r=4, g=3, b=2, stretch="hist")
+	plot(vec, add=T, col="red")
 
 Dies sollte zu dem unten gezeigten Bild führen.
 
-![](Tut_1_Fig_8.png)
+![](Tut_1_Fig_10.png)
 
 Wir können nun deutlich erkennen, dass sich das Shapefile mit dem Bild überschneidet, und sollten es daher nutzen können, um den Landsat-Datensatz zu beschneiden.
 
@@ -192,22 +192,22 @@ Wenn wir die Variable mit
 
 ausführen, sehen wir in der Konsolenausgabe die maximale Ausdehnung, die von der Shapefile abgedeckt wird.
 
-![](Tut_1_Fig_9.png)
+![](Tut_1_Fig_11.png)
 
 Im nächsten Schritt verwenden wir diese Ausdehnungsvariable, um die Satellitenaufnahme zu beschneiden:
 
     setwd(„D:/remote_sensing/Landsat/Output“)
     ls_wien_clip <- crop(ls_wien, e, filename="ls_wien_clipped.tif", overwrite=TRUE)
 
-Dieser Vorgang schneidet nun die Landsat-Aufnahme anhand des in der Variablen e gespeicherten Ausmaßes zu und speichert das zugeschnittene Bild in der Variablen ls_d239_clip. Zusätzlich wird eine neue TIF-Datei auf der Festplatte erstellt und im zuletzt definierten Pfad gespeichert (im Beispiel wechseln wir den Ordner, bevor wir den Befehl zum Zuschneiden ausführen, um zu steuern, wo die zugeschnittenen Dateien gespeichert werden).
+Dieser Vorgang schneidet nun die Landsat-Aufnahme anhand des in der Variablen e gespeicherten Ausmaßes zu und speichert das zugeschnittene Bild in der Variablen ls_wien_clip. Zusätzlich wird eine neue TIF-Datei auf der Festplatte erstellt und im zuletzt definierten Pfad gespeichert (im Beispiel wechseln wir den Ordner, bevor wir den Befehl zum Zuschneiden ausführen, um zu steuern, wo die zugeschnittenen Dateien gespeichert werden).
 
 Nach dem Zuschneiden können wir uns die zugeschnittene Satellitenaufnahme mit dem Befehl `plotRGB` ansehen:
 
 	plotRGB(ls_wien_clip, r=3, g=2, b=1, stretch="hist")
 
-Wir sehen nun, dass der von der beschnittenen Satellitenaufnahme abgedeckte Bereich deutlich kleiner ist als unsere ursprüngliche Aufnahme. Andererseits werden im ausgegebenen Bild mehr Details sichtbar.
+Wir sehen nun, dass der von der beschnittenen Satellitenaufnahme abgedeckte Bereich deutlich kleiner ist als unsere ursprüngliche Aufnahme und im ausgegebenen Bild mehr Details sichtbar werden.
 
-![](Tut_1_Fig_10.png)
+![](Tut_1_Fig_12.png)
 
 #### Ansatz 2: Zuschneiden auf den exakten Umriss der Shapefile-Datei ####
 
@@ -218,12 +218,12 @@ Um die Rasterdatei genau auf die Form des Polygons zu beschneiden, ist nur ein z
 
 Der Maskierungsvorgang kann je nach Rechnerleistung recht lange dauern. Am Ende sollte das Bild wie folgt aussehen:
 
-![](Tut_1_Fig_11.png)
+![](Tut_1_Fig_13.png)
 
 
 ### SCHRITT 4: Anwenden einer Wolkenmaske ###
 
-Im nächsten Schritt nutzen wir das Wolkenmaskenprodukt, das standardmäßig zusammen mit den Landsat-8 und Landsat-9 Oberflächenreflexionsprodukt bereitgestellt wird. Sie finden das Wolkenmaskenprodukt befindet im selben Ordner wie die Bänder und erkennen es an der Dateiendung **_QA_PIXEL**. Da  das Landsat-9 Bild (**LC09_L2SP_190026_20260310_20260311_02_T1**) stärker von Wolken betroffen ist als das Landsat 8 Bild, verwenden wir diese Szene als Beispiel.
+Im nächsten Schritt nutzen wir das Qualitätsprodukt, das standardmäßig zusammen mit den Landsat-8 und Landsat-9 Oberflächenreflexionsprodukt bereitgestellt wird. Sie finden das Qualitätsprodukt im selben Ordner wie die Bänder und erkennen es an der Dateiendung **_QA_PIXEL**. Da  das Landsat-9 Bild (**LC09_L2SP_190026_20260310_20260311_02_T1**) stärker von Wolken betroffen ist als das Landsat 8 Bild, verwenden wir diese Szene als Beispiel.
 
 Um die Wolkenmaske zu laden, verwenden wir den bereits bekannten Code zum Laden eines Rasterbildes:
 
@@ -236,40 +236,45 @@ Wir können uns die gerade geladenen Daten ansehen, indem wir das Raster mit fol
 
 Dies führt zu folgendem Bild:
 
-![](Tut_1_Fig_13.png)
+![](Tut_1_Fig_14.png)
 
 Beachten Sie, dass es hier keinen Sinn macht, den Befehl **plotRGB** zu verwenden, da das Wolkenmaskenraster nur eine einzige Rasterebene bzw. einen einzigen Kanal enthält.
 
-Wir sehen, dass die Wolkenmaskenebene in unserem Fall fünf verschiedene Werte enthält. Um zu verstehen, was jede der fünf Klassen genau bedeutet, muss man den Leitfaden zur Oberflächenreflexion von Landsat 8 und 9 zu Rate ziehen (Link siehe oben).
+Wir sehen, dass das Qualitätsprodukt viele verschiedene Werte enthält, die jedoch trotzdem eher kategorisch als kontinuierlich aussehen. Um zu verstehen, was jede der Werte genau bedeutet, muss man den Leitfaden zur Oberflächenreflexion von Landsat 8 und 9 zu Rate ziehen (Link siehe oben).
 
-Wenn wir die dargestellte Maske mit dem Originalbild vergleichen:
-
-![](Tut_1_Fig_12.png)
-
-können wir daraus schließen, dass der Wert 3 offenbar die Wolkendecke, der Wert 2 Wolkenschatten und der Wert 1 Gewässer bezeichnet. Klare Pixel werden durch den Wert 0 gekennzeichnet. Bitte beachten Sie, dass sich diese Werte je nach der verwendeten Version des Oberflächenreflexionsprodukts ändern können. Es wird dringend empfohlen, diese Informationen im entsprechenden Produktleitfaden zu überprüfen.
-
-Als nächsten Schritt müssen wir die Wolken maskieren oder alternativ alle Pixel, die weder klar noch Wasser sind. In diesem Fall verfolgen wir den letzteren Ansatz. Dazu erstellen wir zunächst eine binäre Maske aus der Wolkendeckenschicht mit dem Befehl:
-
-    d310_mask_clip_bin <- d310_mask_clip2 > 1
-    plot (d310_mask_clip_bin)
-
-In dieser neuen Ebene sind nun alle von Wolken oder Wolkendecke betroffenen Bereiche mit dem Wert 1 gekennzeichnet, während alle Pixel, die entweder klar oder Gewässer sind, den Wert 0 haben.
-
+Hier findet sich im Kapitel zum Qualitätsprodukt (Seite 19 und folgende Seiten) folgende Tabelle: 
 ![](Tut_1_Fig_15.png)
 
-Nun können wir diese Maske mit dem folgenden Befehl auf das ursprüngliche, beschnittene Landsat-Bild anwenden:
+Hier können wir nun erkennen, dass klare Pixel ohne Wolken oder sonstige Beeinträchtigungen den Wert "21824" ("Clear with lows set") besitzt. Höhere Werte sind entweder von Wolken oder Wolkenschatten betroffen oder repräsentieren Wasserflächen. Im Folgenden werden wir nun zuerst eine simple Maske anwenden, die alle Pixel, die keine klaren Landpixel repräsentieren ausschließt (d.h., Wasser und von Wolken betroffene Flächen werden maskiert).
 
-    d310_masked <- mask(ls_d310_clip2, d310_mask_clip_bin, maskvalue=1,  updatevalue=NA)
-    plotRGB(d310_masked, r=3, g=2, b=1, stretch="hist")
+Dazu erstellen wir zunächst eine binäre Maske aus dem Qualitätsproduktraster mit dem Befehl:
 
-!! Beachten Sie, dass Sie zunächst das Bild ls_d310_clip2 erstellen müssen, indem Sie den oben für das d239-Bild bereitgestellten Code wie in der Übung beschrieben anpassen – dieser Code ist hier nicht enthalten!! Dies führt zu einer neuen Version des Landsat-Bildes, in der alle von Wolken betroffenen Pixel ausgeblendet wurden, indem alle Werte im Landsat-Bild durch NA (= nicht verfügbar) ersetzt wurden.
+    ls9_quality_bin <- ls9_quality > 21824
+
+Und sehen uns das Ergebnis an
+	
+    plot(ls9_quality_bin)
+
+In dieser neuen Ebene sind nun alle Wasserflächen, sowie von Wolken oder Wolkenschatten betroffenen Bereiche mit dem Wert 1 gekennzeichnet, während alle Pixel, die entweder klar oder Gewässer sind, den Wert 0 haben.
 
 ![](Tut_1_Fig_16.png)
 
+Nun können wir diese Maske mit dem folgenden Befehl auf das Landsat-9 Bild  anwenden:
+
+    ls9_wien_masked <- mask(ls9_wien, ls9_quality_bin, maskvalue=1,  updatevalue=NA)
+	plotRGB(ls9_wien_masked, r=3, g=2, b=1, stretch="hist")
+
+
+!! Beachten Sie, dass Sie zunächst das Bild ls9_wien erstellen müssen, indem Sie den oben für das Landsat-8-Bild bereitgestellten Code wie in der Übung beschrieben anpassen – dieser Code ist hier nicht enthalten!! 
+
+Dies führt zu einer neuen Version des Landsat-Bildes, in der alle von Wolken betroffenen Pixel ausgeblendet wurden, indem alle Werte im Landsat-Bild durch NA (= nicht verfügbar) ersetzt wurden.
+
+![](Tut_1_Fig_17.png)
+
 Um dieses Bild zu speichern, können wir entweder wie zuvor in der **crop()**-Funktion einen Dateinamen in der **mask()**-Funktion angeben oder einen separaten Befehl verwenden:
 
-    writeRaster(d310_masked, filename="Landsat8_D310_cloud_masked.tif", format="GTiff")
+    writeRaster(ls9_wien_masked, filename="Landsat9_cloud_masked.tif", format="GTiff")
 
-Möglicherweise möchten wir den aktuellen Pfad in einen Ausgabeordner ändern, bevor wir die Rasterdatei speichern. Dazu können Sie die **setwd()**-Funktion verwenden. 
+Möglicherweise möchten wir den aktuellen Pfad in einen Ausgabeordner ändern, bevor wir die Rasterdatei speichern. Dazu können Sie die **setwd()**-Funktion verwenden. Der writeRaster-Befehl ist allgemein wichtig um geokodierte Daten aus R zu exportieren, u.A. um Multiband-Raster (wie hier für die Landsat-Szenen erstelle)  dann z.B. in QGIS oder SNAP als solche öffnen zu können (aus den 6 einzelnen Raster für die jeweiligen Bänder wird ein Raster mit 6 Bändern/Kanälen).
 
 
