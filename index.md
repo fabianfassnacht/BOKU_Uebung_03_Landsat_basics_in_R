@@ -293,7 +293,7 @@ Nun können wir diese Maske mit dem folgenden Befehl auf das Landsat-9 Bild  anw
 
 Dies führt zu einer neuen Version des Landsat-9 Bildes, in der alle von Wolken betroffenen Pixel ausgeblendet wurden indem alle Werte im Landsat-Bild durch NA (= nicht verfügbar) ersetzt wurden.
 
-![](Tut_1_Fig_16.png)
+![](Fig_16.png)
 
 **Abbildung 16: Abbildung des wolkenmaskierten Landsat-9 Bildes**
 
