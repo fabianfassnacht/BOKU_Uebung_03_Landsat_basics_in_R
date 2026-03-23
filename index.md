@@ -142,7 +142,7 @@ In diesem Bild erscheint die Vegetation nun in Rottönen, während grünliche Be
 
 #### Übung: Visualisierungseinstellungen erkunden #####
 
-Um die bisher erlernten Befehle ein wenig zu üben, versuche, das zweite Bild aus den heruntergeladenen Daten zu laden. Speichern Sie das zweite Bild in einer Variablen namens **ls9_wien**. Experimentieren Sie noch ein wenig mit dem Befehl **plotRGB** und probieren Sie verschiedene Visualisierungseinstellungen aus (ändern Sie beispielsweise die für die Darstellung verwendeten Kanäle und beobachten Sie, wie sich die Farben des Bildes verändern).
+Um die bisher erlernten Befehle ein wenig zu üben, versuchen Sie, das zweite Bild aus den heruntergeladenen Daten zu laden. Speichern Sie das zweite Bild in einer Variablen namens **ls9_wien**. Experimentieren Sie noch ein wenig mit dem Befehl **plotRGB** und probieren Sie verschiedene Visualisierungseinstellungen aus (ändern Sie beispielsweise die für die Darstellung verwendeten Kanäle und beobachten Sie, wie sich die Farben des Bildes verändern).
 
 ### Schritt 3: Zuschneiden von Landsat-Daten ###
 
