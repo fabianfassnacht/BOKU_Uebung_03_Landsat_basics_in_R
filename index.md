@@ -298,7 +298,7 @@ Dies führt zu einer neuen Version des Landsat-9 Bildes, in der alle von Wolken 
 
 Um dieses Bild zu speichern, können wir entweder wie oben bereits für die **crop()**-Funktion gezeigt, einen Dateinamen in der **mask()**-Funktion angeben oder einen separaten Befehl verwenden:
 
-    writeRaster(ls9_wien_masked, filename="Landsat9_cloud_masked.tif", format="GTiff")
+    writeRaster(ls9_wien_masked, filename="Landsat9_cloud_masked.tif")
 
 Möglicherweise möchten wir den aktuellen Pfad in einen Ausgabeordner ändern, bevor wir die Rasterdatei speichern. Dazu können Sie die **setwd()**-Funktion verwenden. Der writeRaster-Befehl ist allgemein wichtig um geokodierte Daten aus R zu exportieren, u.A. um Multiband-Raster (wie hier für die Landsat-Szenen erstelle)  dann z.B. in QGIS oder SNAP als solche öffnen zu können (aus den 6 einzelnen Raster für die jeweiligen Bänder wird ein Raster mit 6 Bändern/Kanälen).
 
