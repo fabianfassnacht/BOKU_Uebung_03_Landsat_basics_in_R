@@ -76,11 +76,11 @@ Als ersten Schritt laden wir das R-Paket "terra" welche die wichtigsten Funktion
 
 R gibt eine Warnmeldung aus, falls ein Paket noch nicht installiert ist. Ist dies der Fall, installieren Sie die Pakete bitte entweder über das Hauptmenü von RStudio, indem Sie **„Tools“ =>** **„Install packages“** auswählen und den Anweisungen im angezeigten Dialog folgen, oder indem Sie den entsprechenden R-Code zur Installation der Pakete in die Konsole eingeben. Um beispielsweise das Paket „terra“ zu installieren, verwenden Sie den folgenden Code:
 
-	install.packages(„terra“)    
+	install.packages("terra")    
 
 Nachdem alle Pakete erfolgreich installiert wurden, laden wir das erste Satellitenbild in zwei Schritten. Dafür speichern wir zunächst die vollständigen Dateipfade aller Landsat-Bänder, die wir soeben in den "bands"-Ordner kopiert haben in einer Textvariable. Wir führen folgenden Befehl aus:
 
-    bandnames <- list.files(„D:/remote_sensing/Landsat/Bands“, pattern="\\.TIF$", full.names = T)
+    bandnames <- list.files("D:/remote_sensing/Landsat/Bands", pattern="\\.TIF$", full.names = T)
 	bandnames
 
 Der im obigen Code angegebene Dateipfad sollte so geändert werden, dass er mit dem Pfad übereinstimmt, unter dem Sie die entsprechenden Dateien auf Ihrem Computer gespeichert haben. Die Einstellung pattern="\\.TIF$" sorgt dafür, dass nur Dateien die mit der Endung ".TIF" enden berücksichtigt werden und die Einstellung "full.names = T" sorgt dafür, dass der komplette Dateipfad gespeichert wird und nicht nur der Dateiname. Wenden Sie anschließend den Befehl „rast“ des terra-Pakets an, um das Bild in ein R-Rasterobjekt zu laden:
@@ -204,7 +204,7 @@ ausführen, sehen wir in der Konsolenausgabe die maximale Ausdehnung, die von de
 
 Im nächsten Schritt verwenden wir diese Ausdehnungsvariable, um die Satellitenaufnahme zu beschneiden:
 
-    setwd(„D:/remote_sensing/Landsat/Output“)
+    setwd("D:/remote_sensing/Landsat/Output")
     ls_wien_clip <- crop(ls_wien, e, filename="ls_wien_clipped.tif", overwrite=TRUE)
 
 Dieser Vorgang schneidet nun die Landsat-Aufnahme anhand des in der Variablen e gespeicherten Ausmaßes zu und speichert das zugeschnittene Bild in der Variablen ls_wien_clip. Zusätzlich wird eine neue TIF-Datei auf der Festplatte erstellt und im zuletzt definierten Pfad gespeichert (im Beispiel wechseln wir den Ordner, bevor wir den Befehl zum Zuschneiden ausführen, um zu steuern, wo die zugeschnittenen Dateien gespeichert werden).
@@ -242,7 +242,7 @@ Im nächsten Schritt nutzen wir das Qualitätsprodukt, das standardmäßig zusam
 Um die Wolkenmaske zu laden, verwenden wir den bereits bekannten Code zum Laden eines Rasterbildes:
 
     setwd("D:/remote_sensing/Landsat9/")
-	ls9_mask <- rast("LC09_L2SP_190026_20260310_20260311_02_T1_QA_PIXEL")
+	ls9_mask <- rast("LC09_L2SP_190026_20260310_20260311_02_T1_QA_PIXEL.TIF")
 
 Wir verwenden hier den "setwd"-Befehl um zuerst in den Ordner zu wechseln in dem sich das Qualitätsproduktraster befindet. Alternativ könnten wir in der nächsten Teile im "rast"-Befehl auch den kompletten Dateipfad zur Datei angeben.
 
@@ -270,7 +270,7 @@ Hier können wir nun erkennen, dass klare Pixel ohne Wolken oder sonstige Beeint
 
 Dazu erstellen wir zunächst eine binäre Maske aus dem Qualitätsproduktraster mit dem Befehl:
 
-    ls9_quality_bin <- ls9_quality > 21824
+    ls9_quality_bin <- ls9_mask > 21824
 
 Und sehen uns das Ergebnis an
 	
